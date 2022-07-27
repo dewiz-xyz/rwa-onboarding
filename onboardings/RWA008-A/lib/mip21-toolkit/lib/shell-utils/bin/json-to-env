@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+NAME="$(basename $0)"
+
+version() {
+  echo "${VERSION:-0.0.0}"
+}
+
+usage() {
+  cat << EOF
+$NAME - Converts a JSON file into POSIX shell environment variable declarations
+Each \`key\`: \`value\` pair will be converted to a \`key=value\` statement.
+If <file> is not provided or is \`-\`, it will read from stdin.
+
+Usage: $NAME [-hvx] [-f] <file>
+   or: $NAME [-hvx] [-f] -
+   or: $NAME [-hvx]
+
+Options:
+  -f, --file     The path to the file to read from.
+  -h, --help     Show this help text.
+  -v, --version  Show the version.
+  -x, --export   Prepend 'export' to the generated environment variables.
+
+Examples:
+  $NAME /path/to/file.json        Regular usage
+  cat /path/to/file.json | $NAME  Same as above
+
+  $NAME -x /path/to/file.json     Export the variables (\`export VAR=VALUE\`)
+
+  $NAME -f /path/to/file.json     Can use the -f option
+  $NAME /path/to/file.jsoni       Or simply a positional argument
+
+  $NAME <<< '{"VAR":"VALUE"}'     JSON literal
+EOF
+}
+
+json-to-env() {
+  local options
+  local file
+  local exports=false
+
+  options=$(getopt -o f:hxv -l file:,help,export,version --name "$NAME" -- "$@")
+  eval set -- "$options"
+
+  while true; do
+    case "$1" in
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      -v|--version)
+        version
+        exit 0
+        ;;
+      -x|--export)
+        exports=true
+        ;;
+      -f|--file)
+        file="$2"
+        shift
+        ;;
+      --)
+        shift
+        break
+        ;;
+    esac
+    shift
+  done
+
+  # If -f/--file is not used, <file> is the first positional argument
+  # If it's not given or empty, then the script should read from stdin
+  file="${file:-${1:-/dev/stdin}}"
+  local output=$(
+    jq -r 'to_entries | map(.key + "|" + (.value | tostring)) | .[]' "$file" |
+      while IFS='|' read -r key value; do
+        # If it's an address, make sure it's checksummed
+        if [[ "$value" =~ '^0x[0-9a-fA-F]{40}$' ]]; then
+          PAIR="${key}=$(seth --to-checksum-address "${value}")"
+        else
+          PAIR="${key}=${value}"
+        fi
+        echo "${PAIR}"
+      done
+  )
+
+  for pair in $output; do
+    if [ "$exports" == 'true' ]; then
+      echo "export ${pair}"
+    else
+      echo "${pair}"
+    fi
+  done
+}
+
+# Executes the function if it's been called as a script.
+# This will evaluate to false if this script is sourced by other script.
+if [ "$0" = "$BASH_SOURCE" ]; then
+  set -eo pipefail
+  json-to-env $@
+fi
