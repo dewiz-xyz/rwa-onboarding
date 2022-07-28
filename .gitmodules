@@ -1,3 +1,6 @@
 [submodule "onboardings/RWA009-A/lib/mip21-toolkit"]
 	path = onboardings/RWA009-A/lib/mip21-toolkit
 	url = https://github.com/clio-finance/mip21-toolkit
+[submodule "onboardings/RWA008-A/lib/mip21-toolkit"]
+	path = onboardings/RWA008-A/lib/mip21-toolkit
+	url = https://github.com/clio-finance/mip21-toolkit
