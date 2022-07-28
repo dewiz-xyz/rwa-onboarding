@@ -1,0 +1,5 @@
+*.tar
+*.tar.gz
+*.asc
+pkg/
+.build/

@@ -1,0 +1,110 @@
+#!/bin/bash
+
+NAME="$(basename $0)"
+
+version() {
+  echo "${VERSION:-0.0.0}"
+}
+
+usage() {
+  cat << EOF
+$NAME - Fetches the info from the on-chain changelog at <changelog_address> and extract it into a JSON file.
+If <changelog_address> is not provided, it will attempt to read from stdin.
+
+Usage: $NAME [--rpc-url <url>] [<changelog_address>]
+   or: $NAME [-hv]
+
+Options:
+    -h, --help    Show this help text.
+    -v, --version Show the version.
+    --rpc-url     Sets the RPC URL for the chain where the changelog is deployed.
+                  If ommited, it uses the value for the \`\$ETH_RPC_URL\` env var.
+
+Examples:
+    $NAME 0x7EafEEa64bF6F79A79853F4A660e0960c821BA50    Fetches the info from CES Goerli MCD
+
+    jq -r '.CHANGELOG' 'addresses.json' | $NAME         When the address is extracted from another file, it can be passed in as input
+
+    $NAME \$(jq -r '.CHANGELOG' 'addresses.json')        This is equivalent to the command above
+EOF
+}
+
+function die() {
+  echo "$@" >&2
+  exit 1
+}
+
+function exit_msg() {
+  echo "$@" >&2
+  exit 0
+}
+
+function get-changelog-pair() {
+  local encoded_key="$1"
+  local rpc_url="$2"
+  local key="$(seth --to-ascii "$encoded_key" | tr -d '\0')"
+  local value="$(seth --rpc-url="$rpc_url" call $changelog 'getAddress(bytes32)(address)' "$encoded_key")"
+  echo "{\"key\":\"${key}\",\"value\":\"${value}\"}"
+}
+
+function changelog-to-json() {
+  local options
+
+  options=$(getopt -o hv -l help,version,rpc-url: --name "$NAME" -- "$@")
+  eval set -- "$options"
+
+  local rpc_url="$ETH_RPC_URL"
+
+  while true; do
+    case "$1" in
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      -v|--version)
+        version
+        exit 0
+        ;;
+      --rpc-url)
+        rpc_url="$2"
+        shift
+        ;;
+      --)
+        shift
+        break
+        ;;
+    esac
+    shift
+  done
+
+  local changelog
+
+  if [ $# -gt 0 ]; then
+    changelog="$1"
+  else
+    read -t5 -r changelog || die "$(usage)"
+  fi
+
+  [ -z "$changelog" ] && die "$(usage)"
+
+  local changelog_keys=$(seth --rpc-url="$rpc_url" call $changelog 'list()(bytes32[])')
+  local pairs=$({
+    while read -d, encoded_key; do
+      get-changelog-pair "$encoded_key" "$rpc_url" &
+    done <<<"${changelog_keys},"
+    # Notice there is an appended `,` above. That is because of a POSIX bug described here:
+    # https://mywiki.wooledge.org/BashPitfalls#IFS.3D.2C_read_-ra_fields_.3C.3C.3C_.22.24csv_line.22
+    wait
+  } | sort)
+  pairs="{\"key\":\"version\",\"value\":\"$(seth --rpc-url="$rpc_url" call $changelog 'version()(string)')\"} ${pairs}"
+
+  jq -s 'from_entries' <<<"$pairs"
+}
+
+# Executes the function if it's been called as a script.
+# This will evaluate to false if this script is sourced by other script.
+if [ "$0" = "$BASH_SOURCE" ]; then
+  set -eo pipefail
+    changelog-to-json $@
+fi
+

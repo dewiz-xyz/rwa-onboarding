@@ -1,0 +1,7 @@
+.env
+.eth-password
+addresses.json
+out/
+cache/
+node_modules/
+.vscode/
