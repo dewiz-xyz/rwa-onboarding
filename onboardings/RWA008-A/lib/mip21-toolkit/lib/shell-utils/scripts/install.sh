@@ -1,1 +1,0 @@
-cp . ${PREFIX:="${HOME}/.local"}
