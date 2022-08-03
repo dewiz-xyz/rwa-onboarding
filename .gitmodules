@@ -19,3 +19,6 @@
 [submodule "lib/dss"]
 	path = lib/dss
 	url = https://github.com/dapphub/dss
+[submodule "lib/ds-math"]
+	path = lib/ds-math
+	url = https://github.com/dapphub/ds-math
