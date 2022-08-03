@@ -4,4 +4,6 @@ out = 'out'
 test = 'src'
 libs = ['lib']
 solc_version = '0.6.12'
-optimizer = false
+
+[default]
+optimizer=false
