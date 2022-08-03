@@ -6,3 +6,15 @@ out/
 !/broadcast
 /broadcast/*
 /broadcast/*/31337/
+
+.env
+.eth-password
+addresses.json
+addresses-*.json
+node_modules/
+env-addresses-network
+env-addresses-mainnet
+env-addresses-goerli
+env-addresses-ces-goerli
+.DS_Store
+.vscode/

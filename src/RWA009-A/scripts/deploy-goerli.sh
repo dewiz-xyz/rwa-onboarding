@@ -1,9 +1,10 @@
 #!/bin/bash
 set -eo pipefail
 
-source "${BASH_SOURCE%/*}/../../scripts/_common.sh"
+echo ${BASH_SOURCE%/*}
+source "${BASH_SOURCE%/*}/../../../scripts/_common.sh"
 # shellcheck disable=SC1091
-source "${BASH_SOURCE%/*}/../../scripts/build-env-addresses.sh" ces-goerli >&2
+source "${BASH_SOURCE%/*}/../../../scripts/build-env-addresses.sh" goerli >&2
 
 [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a goerli ETH_RPC_URL"
 
@@ -33,9 +34,9 @@ ILK_ENCODED="$(cast --from-ascii "$ILK" | cast --to-bytes32)"
 # build it
 make build
 
-FORGE_DEPLOY="${BASH_SOURCE%/*}/../../scripts/forge-deploy.sh"
-FORGE_VERIFY="${BASH_SOURCE%/*}/../../scripts/forge-verify.sh"
-CAST_SEND="${BASH_SOURCE%/*}/../../scripts/cast-send.sh"
+FORGE_DEPLOY="${BASH_SOURCE%/*}/../../../scripts/forge-deploy.sh"
+FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
+CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 # Contracts
 declare -A contracts
@@ -46,16 +47,16 @@ contracts[liquidationOracle]='RwaLiquidationOracle'
 
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {
-    debug 'WARNING: `$RWA_TOKEN` not set. Deploying it...'
-    TX=$($CAST_SEND "${RWA_TOKEN_FAB}" 'createRwaToken(string,string,address)' "$NAME" "$SYMBOL" "$MCD_PAUSE_PROXY")
-    debug "TX: $TX"
+	debug 'WARNING: `$RWA_TOKEN` not set. Deploying it...'
+	TX=$($CAST_SEND "${RWA_TOKEN_FAB}" 'createRwaToken(string,string,address)' "$NAME" "$SYMBOL" "$OPERATOR")
+	debug "TX: $TX"
 
-    RECEIPT="$(cast receipt --json $TX)"
-    TX_STATUS="$(jq -r '.status' <<<"$RECEIPT")"
-    [[ "$TX_STATUS" != "0x1" ]] && die "Failed to create ${SYMBOL} token in tx ${TX}."
+	RECEIPT="$(cast receipt --json $TX)"
+	TX_STATUS="$(jq -r '.status' <<<"$RECEIPT")"
+	[[ "$TX_STATUS" != "0x1" ]] && die "Failed to create ${SYMBOL} token in tx ${TX}."
 
-    RWA_TOKEN="$(jq -r ".logs[0].address" <<<"$RECEIPT")"
-    debug "${SYMBOL}: ${RWA_TOKEN}"
+	RWA_TOKEN=$(cast --to-checksum-address "$(jq -r ".logs[0].address" <<<"$RECEIPT")")
+	debug "${SYMBOL}: ${RWA_TOKEN}"
 }
 
 # route it
@@ -77,14 +78,16 @@ debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 
 # urn it
 [[ -z "$RWA_URN" ]] && {
-    RWA_URN=$($FORGE_DEPLOY RwaUrn2 --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
+    RWA_URN=$($FORGE_DEPLOY ${contracts[urn]} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
     debug "${SYMBOL}_${LETTER}_URN: ${RWA_URN}"
+
     $CAST_SEND "$RWA_URN" 'rely(address)' "$MCD_PAUSE_PROXY" &&
-        $CAST_SEND "$RWA_URN" 'deny(address)' "$ETH_FROM"
+	    $CAST_SEND "$RWA_URN" 'deny(address)' "$ETH_FROM"
 }
+
 # jar it
 [[ -z "$RWA_JAR" ]] && {
-    RWA_JAR=$($FORGE_DEPLOY RwaJar --constructor-args "$CHANGELOG")
+    RWA_JAR=$($FORGE_DEPLOY ${contracts[jar]} --constructor-args "$CHANGELOG")
     debug "${SYMBOL}_${LETTER}_JAR: ${RWA_JAR}"
 }
 

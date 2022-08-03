@@ -1,0 +1,35 @@
+{
+  "name": "rwa-onboarding",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:clio-finance/rwa-onboarding.git",
+  "author": "Nazar Duchak <omelko39@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "husky install",
+    "prepublishOnly": "copyfiles -u 1 \"./src/**/*.sol\" ./",
+    "postpublish": "rimraf ./*.sol",
+    "prepack": "yarn prepublishOnly",
+    "postpack": "yarn postpublish",
+    "lint": "run-s solhint prettier",
+    "lint:check": "run-s prettier:check solhint:check",
+    "prettier": "yarn prettier:check --write",
+    "prettier:check": "prettier --check \"src/**/*.sol\"",
+    "solhint": "yarn solhint:check --fix",
+    "solhint:check": "solhint --config ./.solhint.json \"src/**/*.sol\""
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "rimraf": "^3.0.2",
+    "solhint": "^3.3.6",
+    "solhint-plugin-prettier": "^0.0.5"
+  },
+  "lint-staged": {
+    "*.{js,css,md,sol}": "prettier --write"
+  }
+}
