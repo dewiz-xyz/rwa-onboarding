@@ -55,13 +55,13 @@ confirm_before_proceed() {
 }
 
 # Contracts
-declare -A contracts
-contracts[token]='RwaToken'
-contracts[urn]='RwaUrn2'
-contracts[urnCloseHelper]='RwaUrnCloseHelper'
-contracts[inputConduit]='RwaInputConduit2'
-contracts[outputConduit]='RwaOutputConduit2'
-contracts[liquidationOracle]='RwaLiquidationOracle'
+# declare -A contracts
+declare contracts[token]='RwaToken'
+declare contracts[urn]='RwaUrn2'
+declare contracts[urnCloseHelper]='RwaUrnCloseHelper'
+declare contracts[inputConduit]='RwaInputConduit2'
+declare contracts[outputConduit]='RwaOutputConduit2'
+declare contracts[liquidationOracle]='RwaLiquidationOracle'
 
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {

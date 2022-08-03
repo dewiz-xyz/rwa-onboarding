@@ -39,11 +39,11 @@ FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
 CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 # Contracts
-declare -A contracts
-contracts[token]='RwaToken'
-contracts[jar]='RwaJar'
-contracts[urn]='RwaUrn2'
-contracts[liquidationOracle]='RwaLiquidationOracle'
+# declare -A contracts
+declare contracts[token]='RwaToken'
+declare contracts[jar]='RwaJar'
+declare contracts[urn]='RwaUrn2'
+declare contracts[liquidationOracle]='RwaLiquidationOracle'
 
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {

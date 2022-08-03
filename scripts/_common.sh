@@ -20,9 +20,8 @@ die() {
 # Normalizes the environment variables to be fully compatible with dapp.tools
 # @see https://github.com/foundry-rs/foundry/issues/1869
 normalize-env-vars() {
-  local ENV_FILE="${BASH_SOURCE%/*}/../.env"
-  [ -f "$ENV_FILE" ] && source "$ENV_FILE"
-
+  # local ENV_FILE="${BASH_SOURCE%/*}/../.env"
+  # [ -f "$ENV_FILE" ] && source "$ENV_FILE"
   export FOUNDRY_ETH_FROM="${FOUNDRY_ETH_FROM:-$ETH_FROM}"
   export FOUNDRY_ETH_KEYSTORE_DIR="${FOUNDRY_ETH_KEYSTORE_DIR:-$ETH_KEYSTORE}"
   export FOUNDRY_ETH_PASSWORD_FILE="${FOUNDRY_ETH_PASSWORD_FILE:-$ETH_PASSWORD}"
