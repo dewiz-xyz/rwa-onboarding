@@ -76,14 +76,14 @@ debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 
 # urn it
 [[ -z "$RWA_URN" ]] && {
-    RWA_URN=$($FORGE_DEPLOY RwaUrn2 --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
+    RWA_URN=$($FORGE_DEPLOY ${Urn} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
     debug "${SYMBOL}_${LETTER}_URN: ${RWA_URN}"
     $CAST_SEND "$RWA_URN" 'rely(address)' "$MCD_PAUSE_PROXY" &&
         $CAST_SEND "$RWA_URN" 'deny(address)' "$ETH_FROM"
 }
 # jar it
 [[ -z "$RWA_JAR" ]] && {
-    RWA_JAR=$($FORGE_DEPLOY RwaJar --constructor-args "$CHANGELOG")
+    RWA_JAR=$($FORGE_DEPLOY ${Jar} --constructor-args "$CHANGELOG")
     debug "${SYMBOL}_${LETTER}_JAR: ${RWA_JAR}"
 }
 
