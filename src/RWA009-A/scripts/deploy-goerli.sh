@@ -39,11 +39,10 @@ FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
 CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 # Contracts
-# declare -A contracts
-declare contracts[token]='RwaToken'
-declare contracts[jar]='RwaJar'
-declare contracts[urn]='RwaUrn2'
-declare contracts[liquidationOracle]='RwaLiquidationOracle'
+Token='RwaToken'
+Jar='RwaJar'
+Urn='RwaUrn2'
+LiquidationOracle='RwaLiquidationOracle'
 
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {
@@ -78,7 +77,7 @@ debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 
 # urn it
 [[ -z "$RWA_URN" ]] && {
-    RWA_URN=$($FORGE_DEPLOY ${contracts[urn]} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
+    RWA_URN=$($FORGE_DEPLOY ${Urn} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS")
     debug "${SYMBOL}_${LETTER}_URN: ${RWA_URN}"
 
     $CAST_SEND "$RWA_URN" 'rely(address)' "$MCD_PAUSE_PROXY" &&
@@ -87,13 +86,13 @@ debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 
 # jar it
 [[ -z "$RWA_JAR" ]] && {
-    RWA_JAR=$($FORGE_DEPLOY ${contracts[jar]} --constructor-args "$CHANGELOG")
+    RWA_JAR=$($FORGE_DEPLOY ${Jar} --constructor-args "$CHANGELOG")
     debug "${SYMBOL}_${LETTER}_JAR: ${RWA_JAR}"
 }
 
 # price it
 [[ -z "$MIP21_LIQUIDATION_ORACLE" ]] && {
-    MIP21_LIQUIDATION_ORACLE=$($FORGE_DEPLOY ${contracts[liquidationOracle]} --constructor-args "$MCD_VAT" "$MCD_VOW")
+    MIP21_LIQUIDATION_ORACLE=$($FORGE_DEPLOY ${LiquidationOracle} --constructor-args "$MCD_VAT" "$MCD_VOW")
     debug "MIP21_LIQUIDATION_ORACLE: ${MIP21_LIQUIDATION_ORACLE}"
 
     $CAST_SEND "$MIP21_LIQUIDATION_ORACLE" 'rely(address)' "$MCD_PAUSE_PROXY" &&
@@ -102,17 +101,17 @@ debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 
 # Verify the contracts
 # Verification is a no-op if the contracts are already verified
-$FORGE_VERIFY $RWA_TOKEN ${contracts[token]} --constructor-args \
+$FORGE_VERIFY $RWA_TOKEN ${Token} --constructor-args \
 	$(cast abi-encode 'x(string,string)' "$NAME" "$SYMBOL") >&2
 
-$FORGE_VERIFY $RWA_URN ${contracts[urn]} --constructor-args \
+$FORGE_VERIFY $RWA_URN ${Urn} --constructor-args \
 	$(cast abi-encode 'x(address,address,address,address,address)' \
 		"$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$DESTINATION_ADDRESS") >&2
 
-$FORGE_VERIFY $RWA_JAR ${contracts[jar]} --constructor-args \
+$FORGE_VERIFY $RWA_JAR ${Jar} --constructor-args \
 	$(cast abi-encode 'x(address)' "$CHANGELOG") >&2
 
-$FORGE_VERIFY $MIP21_LIQUIDATION_ORACLE ${contracts[liquidationOracle]} --constructor-args \
+$FORGE_VERIFY $MIP21_LIQUIDATION_ORACLE ${LiquidationOracle} --constructor-args \
 	$(cast abi-encode 'x(address,address)' "$MCD_VAT" "$MCD_VOW") >&2
 
 # print it

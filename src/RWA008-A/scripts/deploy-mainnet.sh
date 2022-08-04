@@ -4,9 +4,9 @@
 
 set -eo pipefail
 
-source "${BASH_SOURCE%/*}/_common.sh"
+source "${BASH_SOURCE%/*}/../../../scripts/_common.sh"
 # shellcheck disable=SC1091
-source "${BASH_SOURCE%/*}/build-env-addresses.sh" mainnet >/dev/null 2>&1
+source "${BASH_SOURCE%/*}/../../../scripts/build-env-addresses.sh" mainnet >/dev/null 2>&1
 
 [[ "$ETH_RPC_URL" && "$(cast chain)" == "ethlive" ]] || die "Please set a mainnet ETH_RPC_URL"
 [[ -z "$MIP21_LIQUIDATION_ORACLE" ]] && die 'Please set the MIP21_LIQUIDATION_ORACLE env var'
@@ -39,9 +39,9 @@ ILK_ENCODED=$(cast --to-bytes32 "$(cast --from-ascii ${ILK})")
 # build it
 make build
 
-FORGE_DEPLOY="${BASH_SOURCE%/*}/forge-deploy.sh"
-FORGE_VERIFY="${BASH_SOURCE%/*}/forge-verify.sh"
-CAST_SEND="${BASH_SOURCE%/*}/cast-send.sh"
+FORGE_DEPLOY="${BASH_SOURCE%/*}/../../../scripts/forge-deploy.sh"
+FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
+CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 confirm_before_proceed() {
     local REPLY
@@ -55,13 +55,12 @@ confirm_before_proceed() {
 }
 
 # Contracts
-# declare -A contracts
-declare contracts[token]='RwaToken'
-declare contracts[urn]='RwaUrn2'
-declare contracts[urnCloseHelper]='RwaUrnCloseHelper'
-declare contracts[inputConduit]='RwaInputConduit2'
-declare contracts[outputConduit]='RwaOutputConduit2'
-declare contracts[liquidationOracle]='RwaLiquidationOracle'
+Token='RwaToken'
+Urn='RwaUrn2'
+UrnCloseHelper='RwaUrnCloseHelper'
+InputConduit='RwaInputConduit2'
+OutputConduit='RwaOutputConduit2'
+LiquidationOracle='RwaLiquidationOracle'
 
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {
@@ -110,7 +109,7 @@ declare contracts[liquidationOracle]='RwaLiquidationOracle'
 [[ -z "$RWA_URN" ]] && {
     confirm_before_proceed "Deploy RWA_URN?"
 
-    RWA_URN=$($FORGE_DEPLOY ${contracts[urn]} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$RWA_OUTPUT_CONDUIT")
+    RWA_URN=$($FORGE_DEPLOY ${Urn} --constructor-args "$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$RWA_OUTPUT_CONDUIT")
     debug "${SYMBOL}_${LETTER}_URN: ${RWA_URN}"
 
     $CAST_SEND "$RWA_URN" 'rely(address)' "$MCD_PAUSE_PROXY" &&
@@ -120,7 +119,7 @@ declare contracts[liquidationOracle]='RwaLiquidationOracle'
 [[ -z "$RWA_URN_CLOSE_HELPER" ]] && {
     confirm_before_proceed "Deploy RWA_URN_CLOSE_HELPER?"
 
-	RWA_URN_CLOSE_HELPER=$($FORGE_DEPLOY ${contracts[urnCloseHelper]})
+	RWA_URN_CLOSE_HELPER=$($FORGE_DEPLOY ${UrnCloseHelper})
 	debug "RWA_URN_CLOSE_HELPER: ${RWA_URN_CLOSE_HELPER}"
 }
 
@@ -128,7 +127,7 @@ declare contracts[liquidationOracle]='RwaLiquidationOracle'
 [[ -z "$RWA_INPUT_CONDUIT" ]] && {
     confirm_before_proceed "Deploy RWA_INPUT_CONDUIT?"
 
-	RWA_INPUT_CONDUIT=$($FORGE_DEPLOY ${contracts[inputConduit]} --constructor-args "$MCD_DAI" "$RWA_URN")
+	RWA_INPUT_CONDUIT=$($FORGE_DEPLOY ${InputConduit} --constructor-args "$MCD_DAI" "$RWA_URN")
 	debug "${SYMBOL}_${LETTER}_INPUT_CONDUIT: ${RWA_INPUT_CONDUIT}"
 
 	$CAST_SEND "$RWA_INPUT_CONDUIT" 'rely(address)' "$MCD_PAUSE_PROXY" &&
@@ -137,19 +136,19 @@ declare contracts[liquidationOracle]='RwaLiquidationOracle'
 
 # Verify the contracts
 # Verification is a no-op if the contracts are already verified
-$FORGE_VERIFY $RWA_TOKEN ${contracts[token]} --constructor-args \
+$FORGE_VERIFY $RWA_TOKEN ${Token} --constructor-args \
 	$(cast abi-encode 'x(string,string)' "$NAME" "$SYMBOL") >&2
 
-$FORGE_VERIFY $RWA_URN ${contracts[urn]} --constructor-args \
+$FORGE_VERIFY $RWA_URN ${Urn} --constructor-args \
 	$(cast abi-encode 'x(address,address,address,address,address)'\
 		"$MCD_VAT" "$MCD_JUG" "$RWA_JOIN" "$MCD_JOIN_DAI" "$RWA_OUTPUT_CONDUIT") >&2
 
-$FORGE_VERIFY $RWA_URN_CLOSE_HELPER ${contracts[urnCloseHelper]} >&2
+$FORGE_VERIFY $RWA_URN_CLOSE_HELPER ${UrnCloseHelper} >&2
 
-$FORGE_VERIFY $RWA_OUTPUT_CONDUIT ${contracts[outputConduit]} --constructor-args \
+$FORGE_VERIFY $RWA_OUTPUT_CONDUIT ${OutputConduit} --constructor-args \
 	$(cast abi-encode 'x(address)' "$MCD_DAI") >&2
 
-$FORGE_VERIFY $RWA_INPUT_CONDUIT ${contracts[inputConduit]} --constructor-args \
+$FORGE_VERIFY $RWA_INPUT_CONDUIT ${InputConduit} --constructor-args \
 	$(cast abi-encode 'x(address,address)' "$MCD_DAI" "$RWA_URN") >&2
 
 # print it
