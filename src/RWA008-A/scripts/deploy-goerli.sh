@@ -70,6 +70,8 @@ debug "${SYMBOL}_${LETTER}_MATE: ${MATE}"
 	debug "${SYMBOL}: ${RWA_TOKEN}"
 }
 
+debug "${SYMBOL}: ${RWA_TOKEN}"
+
 # route it
 [[ -z "$RWA_OUTPUT_CONDUIT" ]] && {
 	RWA_OUTPUT_CONDUIT=$($FORGE_DEPLOY ${OutputConduit} --constructor-args "$MCD_DAI")

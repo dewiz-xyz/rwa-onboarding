@@ -58,6 +58,8 @@ LiquidationOracle='RwaLiquidationOracle'
 	debug "${SYMBOL}: ${RWA_TOKEN}"
 }
 
+debug "${SYMBOL}: ${RWA_TOKEN}"
+
 # route it
 [[ -z "$DESTINATION_ADDRESS" ]] && die "DESTINATION_ADDRESS is not set"
 debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"

@@ -84,6 +84,8 @@ confirm_before_proceed() {
     $FORGE_VERIFY $RWA_TOKEN ${Token} --constructor-args $(cast abi-encode 'x(string,string)' "$NAME" "$SYMBOL")
 }
 
+debug "${SYMBOL}: ${RWA_TOKEN}"
+
 # route it
 debug "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT: ${DESTINATION_ADDRESS}"
 

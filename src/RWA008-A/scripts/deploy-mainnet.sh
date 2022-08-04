@@ -78,6 +78,8 @@ LiquidationOracle='RwaLiquidationOracle'
 	debug "${SYMBOL}: ${RWA_TOKEN}"
 }
 
+debug "${SYMBOL}: ${RWA_TOKEN}"
+
 # route it
 [[ -z "$RWA_OUTPUT_CONDUIT" ]] && {
     confirm_before_proceed "Deploy RWA_OUTPUT_CONDUIT?"
