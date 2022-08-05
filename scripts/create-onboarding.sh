@@ -25,9 +25,7 @@ createOnboarding() {
         exit 0 
     fi
     
-    if [[ ${#RWA_NUMBER} < 3 ]]; then
-      RWA_NUMBER="0$RWA_NUMBER"
-    fi
+    RWA_NUMBER=`printf %03d $RWA_NUMBER`
 
     if [ -z "$ILK_LETTER" ]; then
         ILK_LETTER="A"
