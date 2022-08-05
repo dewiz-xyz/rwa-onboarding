@@ -21,7 +21,7 @@ createOnboarding() {
     fi
 
     if ! [[ "$RWA_NUMBER" =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then 
-        log "Inputs must be a numbers" 
+        log "RWA_NUMBER: Inputs must be a numbers" 
         exit 0 
     fi
     
