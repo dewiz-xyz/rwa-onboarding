@@ -2,19 +2,25 @@
 
 Onboarding [HVB](https://forum.makerdao.com/t/mip6-huntingdon-valley-bank-loan-syndication-collateral-onboarding-application/14219) to MCD. Forked and adapted from [MIP21-RWA-Example](https://github.com/makerdao/MIP21-RWA-Example) template repo.
 
-### Install lib dependencies
+## Install lib dependencies
 
 ```bash
 make update
 ```
 
-### Create a local `.env` file and change the placeholder values
+## Create a local `.env` file and change the placeholder values
 
 ```bash
-cp .env.exaples .env
+cp .env.exaples .env # Run in the root of repo
 ```
 
-### Deploy contracts
+## Test contracts
+
+```bash
+make test ILK=RWA009-A # Run unit tests
+```
+
+## Deploy contracts
 
 ```bash
 make deploy-ces-goerli ILK=RWA009-A # to deploy contracts for the CES Fork of Goerli MCD

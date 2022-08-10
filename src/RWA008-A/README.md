@@ -2,49 +2,44 @@
 
 Repository for onboarding SocGen's [OFH](https://forum.makerdao.com/t/security-tokens-refinancing-mip6-application-for-ofh-tokens/10605/8) to MCD.
 
-## Architecture Overview
-
-TODO.
-
-### Install lib dependencies
+## Install lib dependencies
 
 ```bash
 make update
 ```
 
-### Build contracts
+## Create a local `.env` file and change the placeholder values
 
 ```bash
-make build
+cp .env.exaples .env # Run in the root of repo
 ```
 
-### Test contracts
+## Test contracts
 
 ```bash
-make test-local # using a local node listening on http://localhost:8545
-make test-remote # using a remote node (alchemy). Requires ALCHEMY_API_KEY env var.
+make test ILK=RWA008-A # Run unit tests
 ```
 
-### Deploy contracts
+## Deploy contracts
 
 ```bash
-make deploy-ces-goerli RWA008-A # to deploy contracts for the CES Fork of Goerli MCD
-make deploy-goerli RWA008-A # to deploy contracts for the official Goerli MCD
-make deploy-mainnet RWA008-A # to deploy contracts for the official Mainnet MCD
+make deploy-ces-goerli ILK=RWA008-A # to deploy contracts for the CES Fork of Goerli MCD
+make deploy-goerli ILK=RWA008-A # to deploy contracts for the official Goerli MCD
+make deploy-mainnet ILK=RWA008-A # to deploy contracts for the official Mainnet MCD
 ```
 
 This script outputs a JSON file like this one:
 
 ```json
 {
-  "SYMBOL": "RWA008AT5",
-  "NAME": "RWA-008-AT5",
-  "ILK": "RWA008AT5-A",
+  "SYMBOL": "RWA008",
+  "NAME": "RWA-008",
+  "ILK": "RWA008-A",
   "MIP21_LIQUIDATION_ORACLE": "<address>",
   "RWA_TOKEN_FACTORY": "<address>",
   "RWA_URN_PROXY_ACTIONS": "<address>",
-  "RWA008AT5": "<address>",
-  "MCD_JOIN_RWA008AT5_A": "<address>",
+  "RWA008": "<address>",
+  "MCD_JOIN_RWA008_A": "<address>",
   "RWA008_A_URN": "<address>",
   "RWA008_A_INPUT_CONDUIT": "<address>",
   "RWA008_A_OUTPUT_CONDUIT": "<address>",

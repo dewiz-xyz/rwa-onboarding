@@ -1,6 +1,6 @@
 # ${{ILK}}
 
-Onboarding [ILK](TODO)
+Onboarding [${{ILK}}](TODO)
 
 ### Install lib dependencies
 
@@ -26,15 +26,15 @@ This script outputs a JSON file like this one:
 
 ```json
 {
-  "RWA009_TOKEN": "<address>",
+  "${{ILK}}_TOKEN": "<address>",
   "MIP21_LIQUIDATION_ORACLE": "<address>",
   "ILK": "${{ILK}}",
-  "RWA009": "<address>",
-  "MCD_JOIN_RWA009_A": "<address>",
-  "RWA009_A_URN": "<address>",
-  "RWA009_A_OUTPUT_CONDUIT": "<address>",
-  "RWA009_A_OPERATOR": "<address>",
-  "RWA009_A_MATE": "<address>"
+  "${{ILK}}": "<address>",
+  "MCD_JOIN_${{ILK}}_A": "<address>",
+  "${{ILK}}_A_URN": "<address>",
+  "${{ILK}}_A_OUTPUT_CONDUIT": "<address>",
+  "${{ILK}}_A_OPERATOR": "<address>",
+  "${{ILK}}_A_MATE": "<address>"
 }
 ```
 
