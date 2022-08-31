@@ -13,9 +13,9 @@ solc:; nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA
 
 build:; forge build
 
-estimate:; ./scripts/estimate-gas.sh ${file} ${contract} ${args}
+estimate:; ./src/${ILK}/scripts/deploy.sh ${NETWORK} --estimate
 
-size:; ./scripts/contract-size.sh ${file} ${contract} ${args}
+deploy:; ./src/${ILK}/scripts/deploy.sh ${NETWORK}
 
 # mainnet
 deploy-mainnet:; ./src/${ILK}/scripts/deploy-mainnet.sh

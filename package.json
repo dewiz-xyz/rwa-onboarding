@@ -29,6 +29,7 @@
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "^0.0.5"
   },
+
   "lint-staged": {
     "*.{js,css,md,sol}": "prettier --write"
   }
