@@ -26,15 +26,16 @@ This script outputs a JSON file like this one:
 
 ```json
 {
-  "${{ILK}}_TOKEN": "<address>",
   "MIP21_LIQUIDATION_ORACLE": "<address>",
+  "RWA_TOKEN_FAB": "<address>",
+  "SYMBOL": "${{TOKEN_SYMBOL}}",
+  "NAME": "${{TOKEN_NAME}}",
   "ILK": "${{ILK}}",
-  "${{ILK}}": "<address>",
-  "MCD_JOIN_${{ILK}}_A": "<address>",
-  "${{ILK}}_A_URN": "<address>",
-  "${{ILK}}_A_OUTPUT_CONDUIT": "<address>",
-  "${{ILK}}_A_OPERATOR": "<address>",
-  "${{ILK}}_A_MATE": "<address>"
+  "${{TOKEN_SYMBOL}}": "<address>",
+  "MCD_JOIN_${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}": "<address>",
+  "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_URN": "<address>",
+  "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_JAR": "<address>",
+  "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_OUTPUT_CONDUIT": "<address>",
 }
 ```
 

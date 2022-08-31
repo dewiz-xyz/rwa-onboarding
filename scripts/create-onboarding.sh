@@ -65,6 +65,9 @@ createOnboarding() {
     sed -i "" -e "s/\${{ILK_LETTER}}/$ILK_LETTER/g" "$ONBOARDING_DIR/scripts/deploy-ces-goerli.sh"
 
     sed -i "" -e "s/\${{ILK}}/$ILK/g" "$ONBOARDING_DIR/README.md"
+    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/README.md"
+    sed -i "" -e "s/\${{TOKEN_LETTER}}/$TOKEN_LETTER/g" "$ONBOARDING_DIR/README.md"
+    sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/README.md"
 
     logSuccess "Onboarding for $ILK created!"
 }
