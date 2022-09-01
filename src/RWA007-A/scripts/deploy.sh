@@ -40,7 +40,7 @@ make build
 FORGE_SCRIPT="${BASH_SOURCE%/*}/../../../scripts/forge-script.sh"
 FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
 FORGE_DEPLOY="${BASH_SOURCE%/*}/../../../scripts/forge-deploy.sh"
-
+CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 # estimate
 [ "$ESTIMATE" = "true" ] && {
@@ -48,38 +48,7 @@ FORGE_DEPLOY="${BASH_SOURCE%/*}/../../../scripts/forge-deploy.sh"
     exit 0
 }
 
-# We should remove deploying of RwaToke and RwaJoin and use Foundry script after Foundry fix the bug related to deploying contract with internal transaction
-
-# tokenize it
-[[ -z "$RWA_TOKEN" ]] && {
-	debug 'WARNING: `$RWA_TOKEN` not set. Deploying it...'
-	TX=$($CAST_SEND "${RWA_TOKEN_FAB}" 'createRwaToken(string,string,address)' "$NAME" "$SYMBOL" "$MCD_PAUSE_PROXY")
-	debug "TX: $TX"
-
-	RECEIPT="$(cast receipt --json $TX)"
-	TX_STATUS="$(jq -r '.status' <<<"$RECEIPT")"
-	[[ "$TX_STATUS" != "0x1" ]] && die "Failed to create ${SYMBOL} token in tx ${TX}."
-
-	export RWA_TOKEN=$(cast --to-checksum-address "$(jq -r ".logs[0].address" <<<"$RECEIPT")")
-	debug "${SYMBOL}: ${RWA_TOKEN}"
-}
-
-# join it
-[[ -z "$RWA_JOIN" ]] && {
-	TX=$($CAST_SEND "${JOIN_FAB}" 'newAuthGemJoin(address,bytes32,address)' "$MCD_PAUSE_PROXY" "$ILK_ENCODED" "$RWA_TOKEN")
-    debug "TX: $TX"
-
-    RECEIPT="$(cast receipt --json $TX)"
-    TX_STATUS="$(jq -r '.status' <<<"$RECEIPT")"
-    [[ "$TX_STATUS" != "0x1" ]] && die "Failed to create ${SYMBOL} token in tx ${TX}."
-
-	export RWA_JOIN=$(cast --to-checksum-address "$(jq -r ".logs[0].address" <<<"$RECEIPT")")
-	debug "MCD_JOIN_${SYMBOL}_${LETTER}: ${RWA_JOIN}"
-}
-
-RESULT=($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment")
-jq -R 'fromjson? | .logs | .[]' <<<"$RESULT" | xargs -I@ cast --to-ascii @ | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
-
+$FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment"
 
 # # print it
 # cat <<JSON

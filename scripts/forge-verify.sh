@@ -5,7 +5,7 @@ source "${BASH_SOURCE%/*}/_common.sh"
 
 function verify() {
   normalize-env-vars
-  check-required-etherscan-api-key
+  # check-required-etherscan-api-key
 
   local CHAIN="$(cast chain)"
   [ "$CHAIN" == 'ethlive' ] && CHAIN='mainnet'

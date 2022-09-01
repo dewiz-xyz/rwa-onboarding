@@ -38,7 +38,6 @@ normalize-env-vars() {
   fi
 
   [ -n "$FOUNDRY_ETH_KEYSTORE_FILE" ] || die "$(err-msg-keystore-file)"
-
 }
 
 # Handle reading from the password file

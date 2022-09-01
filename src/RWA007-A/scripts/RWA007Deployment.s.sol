@@ -19,8 +19,6 @@ contract RWA007Deployment is Script {
     address immutable MCD_JUG;
     address immutable MCD_JOIN_DAI;
     address immutable MCD_PSM_USDC_A;
-    address RWA_TOKEN;
-    address RWA_JOIN;
     RwaTokenFactory immutable RWA_TOKEN_FAB;
     JoinFab immutable JOIN_FAB;
     Changelog CHANGELOG;
@@ -43,9 +41,6 @@ contract RWA007Deployment is Script {
         RWA_TOKEN_FAB             = RwaTokenFactory(CHANGELOG.getAddress(bytes32("RWA_TOKEN_FAB")));
         JOIN_FAB                  = JoinFab(CHANGELOG.getAddress(bytes32("JOIN_FAB")));
 
-        RWA_TOKEN                 = getEnvAddressRequired("RWA_TOKEN");
-        RWA_JOIN                  = getEnvAddressRequired("RWA_JOIN");
-
         NAME                      = getEnvStringRequired("NAME");
         SYMBOL                    = getEnvStringRequired("SYMBOL");
         LETTER                    = getEnvStringRequired("LETTER");
@@ -56,20 +51,19 @@ contract RWA007Deployment is Script {
     function run() external {
         vm.startBroadcast();
 
-        // TODO uncomment it after Foundry fix bug related to deploying throug factories
         // tokenize it
-        // address RWA_TOKEN = getEnvAddress("RWA_TOKEN");
-        // if (RWA_TOKEN == address(0)) {
-        //     RWA_TOKEN = address(RWA_TOKEN_FAB.createRwaToken(NAME, SYMBOL, MCD_PAUSE_PROXY));
-        // }
-        // logDeployment("RWA_TOKEN", RWA_TOKEN);
+        address RWA_TOKEN = getEnvAddress("RWA_TOKEN");
+        if (RWA_TOKEN == address(0)) {
+            RWA_TOKEN = address(RWA_TOKEN_FAB.createRwaToken(NAME, SYMBOL, MCD_PAUSE_PROXY));
+        }
+        logDeployment("RWA_TOKEN", RWA_TOKEN);
 
-        // // join it
-        // address RWA_JOIN = getEnvAddress("RWA_JOIN");
-        // if (RWA_JOIN == address(0)) {
-        //     RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
-        // }
-        // logDeployment("RWA_JOIN", RWA_JOIN);
+        // join it
+        address RWA_JOIN = getEnvAddress("RWA_JOIN");
+        if (RWA_JOIN == address(0)) {
+            RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
+        }
+        logDeployment("RWA_JOIN", RWA_JOIN);
 
         // route it
         address RWA_OUTPUT_CONDUIT = getEnvAddress("RWA_OUTPUT_CONDUIT");

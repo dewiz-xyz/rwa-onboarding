@@ -22,7 +22,7 @@ deploy() {
   # 1. Duplicating stdout to stderr through `tee`
   # 2. Extracting only the address of the deployed contract to stdout
   RESPONSE=$(forge script --broadcast --slow --verify --retries 10 --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --gas-price $ETH_GAS --gas-limit $FOUNDRY_GAS_LIMIT --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" "${PASSWORD_OPT[@]}" "$@" | tee >(cat 1>&2))
-  # jq -R 'fromjson? | .logs | .[]' <<<"$RESPONSE" | xargs -I@ cast --to-ascii @ | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
+  jq -R 'fromjson? | .logs | .[]' <<<"$RESPONSE" | xargs -I@ cast --to-ascii @ | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
 }
 
 estimate() {

@@ -47,7 +47,7 @@ LiquidationOracle='RwaLiquidationOracle'
 # tokenize it
 [[ -z "$RWA_TOKEN" ]] && {
 	debug 'WARNING: `$RWA_TOKEN` not set. Deploying it...'
-	TX=$($CAST_SEND "${RWA_TOKEN_FAB}" 'createRwaToken(string,string,address)' "$NAME" "$SYMBOL" "$OPERATOR")
+	TX=$($CAST_SEND "${RWA_TOKEN_FAB}" 'createRwaToken(string,string,address)' "$NAME" "$SYMBOL" "$MCD_PAUSE_PROXY")
 	debug "TX: $TX"
 
 	RECEIPT="$(cast receipt --json $TX)"
