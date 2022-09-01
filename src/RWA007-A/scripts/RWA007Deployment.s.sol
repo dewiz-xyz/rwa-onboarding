@@ -19,6 +19,8 @@ contract RWA007Deployment is Script {
     address immutable MCD_JUG;
     address immutable MCD_JOIN_DAI;
     address immutable MCD_PSM_USDC_A;
+    address RWA_TOKEN;
+    address RWA_JOIN;
     RwaTokenFactory immutable RWA_TOKEN_FAB;
     JoinFab immutable JOIN_FAB;
     Changelog CHANGELOG;
@@ -41,6 +43,9 @@ contract RWA007Deployment is Script {
         RWA_TOKEN_FAB             = RwaTokenFactory(CHANGELOG.getAddress(bytes32("RWA_TOKEN_FAB")));
         JOIN_FAB                  = JoinFab(CHANGELOG.getAddress(bytes32("JOIN_FAB")));
 
+        RWA_TOKEN                 = getEnvAddressRequired("RWA_TOKEN");
+        RWA_JOIN                  = getEnvAddressRequired("RWA_JOIN");
+
         NAME                      = getEnvStringRequired("NAME");
         SYMBOL                    = getEnvStringRequired("SYMBOL");
         LETTER                    = getEnvStringRequired("LETTER");
@@ -51,30 +56,30 @@ contract RWA007Deployment is Script {
     function run() external {
         vm.startBroadcast();
 
+        // TODO uncomment it after Foundry fix bug related to deploying throug factories
         // tokenize it
-        address RWA_TOKEN = getEnvAddress("RWA_TOKEN");
-        if (RWA_TOKEN == address(0)) {
-            RWA_TOKEN = address(RWA_TOKEN_FAB.createRwaToken(NAME, SYMBOL, MCD_PAUSE_PROXY));
-        }
-        console2.log("RWA_TOKEN", RWA_TOKEN);
+        // address RWA_TOKEN = getEnvAddress("RWA_TOKEN");
+        // if (RWA_TOKEN == address(0)) {
+        //     RWA_TOKEN = address(RWA_TOKEN_FAB.createRwaToken(NAME, SYMBOL, MCD_PAUSE_PROXY));
+        // }
+        // logDeployment("RWA_TOKEN", RWA_TOKEN);
 
-        // join it
-        address RWA_JOIN = getEnvAddress("RWA_JOIN");
-        if (RWA_JOIN == address(0)) {
-            RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
-        }
-        console2.log("RWA_JOIN", RWA_JOIN);
+        // // join it
+        // address RWA_JOIN = getEnvAddress("RWA_JOIN");
+        // if (RWA_JOIN == address(0)) {
+        //     RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
+        // }
+        // logDeployment("RWA_JOIN", RWA_JOIN);
 
-        // // route it
+        // route it
         address RWA_OUTPUT_CONDUIT = getEnvAddress("RWA_OUTPUT_CONDUIT");
         if (RWA_OUTPUT_CONDUIT == address(0)) {
             RwaOutputConduit3 outputC =  new RwaOutputConduit3(MCD_PSM_USDC_A, address(0)); // TODO remove quiteTo from constructor, better to set it in the spell
             outputC.rely(MCD_PAUSE_PROXY);
-            outputC.deny(msg.sender);
 
             RWA_OUTPUT_CONDUIT = address(outputC);
         }
-        console2.log("RWARWA_OUTPUT_CONDUITJOIN", RWA_OUTPUT_CONDUIT);
+        logDeployment("RWA_OUTPUT_CONDUIT", RWA_OUTPUT_CONDUIT);
         
         // urn it
         address RWA_URN = getEnvAddress("RWA_URN");
@@ -84,15 +89,19 @@ contract RWA007Deployment is Script {
             urn.deny(msg.sender);
 
             RWA_URN = address(urn);
+
+            // Set _quitTo address to the URN and deny deplyer
+            RwaOutputConduit3(RWA_OUTPUT_CONDUIT).file("quitTo", RWA_URN);
+            RwaOutputConduit3(RWA_OUTPUT_CONDUIT).deny(msg.sender);
         }
-        console2.log("RWA_URN", RWA_URN);
+        logDeployment("RWA_URN", RWA_URN);
 
         // jar it
         address RWA_JAR = getEnvAddress("RWA_JAR");
         if (RWA_JAR == address(0)) {
             RWA_JAR = address(new RwaJar(address(CHANGELOG)));
         }
-        console2.log("RWA_JAR", RWA_JAR);
+        logDeployment("RWA_JAR", RWA_JAR);
 
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = getEnvAddress("RWA_INPUT_CONDUIT_JAR");
@@ -103,7 +112,7 @@ contract RWA007Deployment is Script {
 
             RWA_INPUT_CONDUIT_JAR = address(inputCJar);
         }
-        console2.log("RWA_INPUT_CONDUIT_JAR", RWA_INPUT_CONDUIT_JAR);
+        logDeployment("RWA_INPUT_CONDUIT_JAR", RWA_INPUT_CONDUIT_JAR);
 
         // route it URN
         address RWA_INPUT_CONDUIT_URN = getEnvAddress("RWA_INPUT_CONDUIT_URN");
@@ -114,7 +123,7 @@ contract RWA007Deployment is Script {
 
             RWA_INPUT_CONDUIT_URN = address(inputCUrn);
         }
-        console2.log("RWA_INPUT_CONDUIT_URN", RWA_INPUT_CONDUIT_URN);
+        logDeployment("RWA_INPUT_CONDUIT_URN", RWA_INPUT_CONDUIT_URN);
         
         vm.stopBroadcast();
 
@@ -152,5 +161,10 @@ contract RWA007Deployment is Script {
         assembly {
             result := mload(add(data, 32))
         }
+    }
+
+    function logDeployment(string memory name, address addr) internal {
+        console2.log(vm.toString(abi.encodePacked('["', name, '","', vm.toString(addr), '"]')));
+
     }
 }
