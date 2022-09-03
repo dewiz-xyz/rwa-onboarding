@@ -26,6 +26,7 @@ contract RWA007Deployment is Script {
     string NAME;
     string SYMBOL;
     string LETTER;
+    string SYMBOL_LETTER;
 
     bytes32 immutable ILK;
 
@@ -44,8 +45,10 @@ contract RWA007Deployment is Script {
         NAME                      = getEnvStringRequired("NAME");
         SYMBOL                    = getEnvStringRequired("SYMBOL");
         LETTER                    = getEnvStringRequired("LETTER");
+        SYMBOL_LETTER             = string(abi.encodePacked(SYMBOL, "_", LETTER));
 
-        ILK                       = bytesToBytes32((abi.encodePacked(SYMBOL, string("-"), LETTER)));
+        ILK                       = bytesToBytes32(abi.encodePacked(SYMBOL, string("-"), LETTER));
+
     }
 
     function run() external {
@@ -56,14 +59,12 @@ contract RWA007Deployment is Script {
         if (RWA_TOKEN == address(0)) {
             RWA_TOKEN = address(RWA_TOKEN_FAB.createRwaToken(NAME, SYMBOL, MCD_PAUSE_PROXY));
         }
-        logDeployment("RWA_TOKEN", RWA_TOKEN);
 
         // join it
         address RWA_JOIN = getEnvAddress("RWA_JOIN");
         if (RWA_JOIN == address(0)) {
             RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
         }
-        logDeployment("RWA_JOIN", RWA_JOIN);
 
         // route it
         address RWA_OUTPUT_CONDUIT = getEnvAddress("RWA_OUTPUT_CONDUIT");
@@ -73,7 +74,6 @@ contract RWA007Deployment is Script {
 
             RWA_OUTPUT_CONDUIT = address(outputC);
         }
-        logDeployment("RWA_OUTPUT_CONDUIT", RWA_OUTPUT_CONDUIT);
         
         // urn it
         address RWA_URN = getEnvAddress("RWA_URN");
@@ -88,14 +88,12 @@ contract RWA007Deployment is Script {
             RwaOutputConduit3(RWA_OUTPUT_CONDUIT).file("quitTo", RWA_URN);
             RwaOutputConduit3(RWA_OUTPUT_CONDUIT).deny(msg.sender);
         }
-        logDeployment("RWA_URN", RWA_URN);
 
         // jar it
         address RWA_JAR = getEnvAddress("RWA_JAR");
         if (RWA_JAR == address(0)) {
             RWA_JAR = address(new RwaJar(address(CHANGELOG)));
         }
-        logDeployment("RWA_JAR", RWA_JAR);
 
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = getEnvAddress("RWA_INPUT_CONDUIT_JAR");
@@ -106,7 +104,6 @@ contract RWA007Deployment is Script {
 
             RWA_INPUT_CONDUIT_JAR = address(inputCJar);
         }
-        logDeployment("RWA_INPUT_CONDUIT_JAR", RWA_INPUT_CONDUIT_JAR);
 
         // route it URN
         address RWA_INPUT_CONDUIT_URN = getEnvAddress("RWA_INPUT_CONDUIT_URN");
@@ -117,10 +114,19 @@ contract RWA007Deployment is Script {
 
             RWA_INPUT_CONDUIT_URN = address(inputCUrn);
         }
-        logDeployment("RWA_INPUT_CONDUIT_URN", RWA_INPUT_CONDUIT_URN);
         
         vm.stopBroadcast();
 
+        logJSONTuple("SYMBOL", SYMBOL);
+        logJSONTuple("NAME", NAME);
+        logJSONTuple("ILK", string(abi.encodePacked(SYMBOL, string("-"), LETTER)));
+        logJSONTuple(SYMBOL, vm.toString(RWA_TOKEN));
+        logJSONTuple(concatString("MCD_JOIN_", SYMBOL_LETTER), vm.toString(RWA_JOIN));
+        logJSONTuple(concatString(SYMBOL_LETTER, "_URN"), vm.toString(RWA_URN));
+        logJSONTuple(concatString(SYMBOL_LETTER, "_JAR"), vm.toString(RWA_JAR));
+        logJSONTuple(concatString(SYMBOL_LETTER, "_OUTPUT_CONDUIT"), vm.toString(RWA_OUTPUT_CONDUIT));
+        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_URN"), vm.toString(RWA_INPUT_CONDUIT_URN));
+        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_JAR"), vm.toString(RWA_INPUT_CONDUIT_JAR));
     }
 
     function getEnvAddressRequired(string memory name) internal returns (address) {
@@ -157,8 +163,12 @@ contract RWA007Deployment is Script {
         }
     }
 
-    function logDeployment(string memory name, address addr) internal {
-        console2.log(vm.toString(abi.encodePacked('["', name, '","', vm.toString(addr), '"]')));
+    function logJSONTuple(string memory key, string memory value) internal {
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
 
+    }
+
+    function concatString(string memory s1, string memory s2) internal pure returns (string memory) {
+        return string(abi.encodePacked(s1, s2));
     }
 }

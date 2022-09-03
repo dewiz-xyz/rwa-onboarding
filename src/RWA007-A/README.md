@@ -17,24 +17,22 @@ cp .env.exaples .env
 ### Deploy contracts
 
 ```bash
-make deploy-ces-goerli ILK=RWA007-A # to deploy contracts for the CES Fork of Goerli MCD
-make deploy-goerli ILK=RWA007-A # to deploy contracts for the official Goerli MCD
-make deploy-mainnet ILK=RWA007-A # to deploy contracts for the official Mainnet MCD
+make deploy ILK=RWA007-A NETWORK=ces-goerli # to deploy contracts for the CES Fork of Goerli MCD
+make deploy ILK=RWA007-A NETWORK=goerli # to deploy contracts for the official Goerli MCD
+make deploy ILK=RWA007-A NETWORK=mainnet # to deploy contracts for the official Mainnet MCD
 ```
 
 This script outputs a JSON file like this one:
 
 ```json
 {
-  "MIP21_LIQUIDATION_ORACLE": "<address>",
-  "RWA_TOKEN_FAB": "<address>",
   "SYMBOL": "<address>",
   "NAME": "<address>",
   "ILK": "<address>",
   "RWA007": "<address>",
   "MCD_JOIN_RWA007_A": "<address>",
   "RWA007_A_URN": "<address>",
-  "RWA007_JAR": "<address>",
+  "RWA007_A_JAR": "<address>",
   "RWA007_A_OUTPUT_CONDUIT": "<address>",
   "RWA007_A_INPUT_CONDUIT_JAR": "<address>",
   "RWA007_A_INPUT_CONDUIT_URN": "<address>",
@@ -44,5 +42,5 @@ This script outputs a JSON file like this one:
 You can save it using `stdout` redirection:
 
 ```bash
-make deploy-ces-goerli ILK=RWA007-A > out/ces-goerli-addresses.json
+make deploy ILK=RWA007-A NETWORK=goerli > out/ces-goerli-addresses.json
 ```

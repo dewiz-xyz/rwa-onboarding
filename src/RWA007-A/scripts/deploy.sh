@@ -32,15 +32,8 @@ export ETH_GAS=6000000
 
 ILK="${SYMBOL}-${LETTER}"
 debug "ILK: ${ILK}"
-ILK_ENCODED="$(cast --from-ascii "$ILK" | cast --to-bytes32)"
-
-
-make build
 
 FORGE_SCRIPT="${BASH_SOURCE%/*}/../../../scripts/forge-script.sh"
-FORGE_VERIFY="${BASH_SOURCE%/*}/../../../scripts/forge-verify.sh"
-FORGE_DEPLOY="${BASH_SOURCE%/*}/../../../scripts/forge-deploy.sh"
-CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 
 # estimate
 [ "$ESTIMATE" = "true" ] && {
@@ -49,21 +42,3 @@ CAST_SEND="${BASH_SOURCE%/*}/../../../scripts/cast-send.sh"
 }
 
 $FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment"
-
-# # print it
-# cat <<JSON
-# {
-#     "MIP21_LIQUIDATION_ORACLE": "${MIP21_LIQUIDATION_ORACLE}",
-#     "RWA_TOKEN_FAB": "${RWA_TOKEN_FAB}",
-#     "SYMBOL": "${SYMBOL}",
-#     "NAME": "${NAME}",
-#     "ILK": "${ILK}",
-#     "${SYMBOL}": "${RWA_TOKEN}",
-#     "MCD_JOIN_${SYMBOL}_${LETTER}": "${RWA_JOIN}",
-#     "${SYMBOL}_${LETTER}_URN": "${RWA_URN}",
-#     "${SYMBOL}_${LETTER}_JAR": "${RWA_JAR}",
-#     "${SYMBOL}_${LETTER}_OUTPUT_CONDUIT": "${RWA_OUTPUT_CONDUIT}"
-#     "${SYMBOL}_${LETTER}_INPUT_CONDUIT_JAR": "${RWA_INPUT_CONDUIT_JAR}"
-#     "${SYMBOL}_${LETTER}_INPUT_CONDUIT_URN": "${RWA_INPUT_CONDUIT_URN}"
-# }
-# JSON
