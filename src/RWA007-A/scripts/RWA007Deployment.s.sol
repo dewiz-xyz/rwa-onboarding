@@ -69,7 +69,7 @@ contract RWA007Deployment is Script {
         // route it
         address RWA_OUTPUT_CONDUIT = getEnvAddress("RWA_OUTPUT_CONDUIT");
         if (RWA_OUTPUT_CONDUIT == address(0)) {
-            RwaOutputConduit3 outputC =  new RwaOutputConduit3(MCD_PSM_USDC_A, address(0)); // TODO remove quiteTo from constructor, better to set it in the spell
+            RwaOutputConduit3 outputC =  new RwaOutputConduit3(MCD_PSM_USDC_A);
             outputC.rely(MCD_PAUSE_PROXY);
 
             RWA_OUTPUT_CONDUIT = address(outputC);
@@ -98,7 +98,7 @@ contract RWA007Deployment is Script {
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = getEnvAddress("RWA_INPUT_CONDUIT_JAR");
         if (RWA_INPUT_CONDUIT_JAR == address(0)) {
-            RwaInputConduit3 inputCJar = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_JAR, address(0)); // TODO remove quiteTo from constructor, better to set it in the spell
+            RwaInputConduit3 inputCJar = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_JAR);
             inputCJar.rely(MCD_PAUSE_PROXY);
             inputCJar.deny(msg.sender);
 
@@ -108,7 +108,7 @@ contract RWA007Deployment is Script {
         // route it URN
         address RWA_INPUT_CONDUIT_URN = getEnvAddress("RWA_INPUT_CONDUIT_URN");
         if (RWA_INPUT_CONDUIT_URN == address(0)) {
-            RwaInputConduit3 inputCUrn = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_URN, address(0)); // TODO remove quiteTo from constructor, better to set it in the spell
+            RwaInputConduit3 inputCUrn = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_URN);
             inputCUrn.rely(MCD_PAUSE_PROXY);
             inputCUrn.deny(msg.sender);
 
