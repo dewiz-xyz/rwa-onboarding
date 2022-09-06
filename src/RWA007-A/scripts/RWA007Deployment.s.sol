@@ -2,15 +2,16 @@
 pragma solidity 0.6.12;
 
 import "forge-std/Script.sol";
-import "../contract/Import.sol";
 
-interface Changelog {
-    function getAddress(bytes32 what) external returns (address);
-}
-
-interface JoinFab {
-    function newAuthGemJoin(address owner, bytes32 ilk, address gem) external returns (address);
-}
+import 'mip21-toolkit/tokens/RwaTokenFactory.sol';
+import 'mip21-toolkit/tokens/RwaToken.sol';
+import 'mip21-toolkit/urns/RwaUrn2.sol';
+import 'mip21-toolkit/conduits/RwaOutputConduit3.sol';
+import 'mip21-toolkit/conduits/RwaInputConduit3.sol';
+import 'mip21-toolkit/jars/RwaJar.sol';
+import 'mip21-toolkit/oracles/RwaLiquidationOracle.sol';
+import 'dss-gem-joins/join-auth.sol';
+import 'forward-proxy/ForwardProxy.sol';
 
 contract RWA007Deployment is Script {
     address immutable MCD_PAUSE_PROXY;
@@ -120,13 +121,13 @@ contract RWA007Deployment is Script {
         logJSONTuple("SYMBOL", SYMBOL);
         logJSONTuple("NAME", NAME);
         logJSONTuple("ILK", string(abi.encodePacked(SYMBOL, string("-"), LETTER)));
-        logJSONTuple(SYMBOL, vm.toString(RWA_TOKEN));
-        logJSONTuple(concatString("MCD_JOIN_", SYMBOL_LETTER), vm.toString(RWA_JOIN));
-        logJSONTuple(concatString(SYMBOL_LETTER, "_URN"), vm.toString(RWA_URN));
-        logJSONTuple(concatString(SYMBOL_LETTER, "_JAR"), vm.toString(RWA_JAR));
-        logJSONTuple(concatString(SYMBOL_LETTER, "_OUTPUT_CONDUIT"), vm.toString(RWA_OUTPUT_CONDUIT));
-        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_URN"), vm.toString(RWA_INPUT_CONDUIT_URN));
-        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_JAR"), vm.toString(RWA_INPUT_CONDUIT_JAR));
+        logJSONTuple(SYMBOL, RWA_TOKEN);
+        logJSONTuple(concatString("MCD_JOIN_", SYMBOL_LETTER), RWA_JOIN);
+        logJSONTuple(concatString(SYMBOL_LETTER, "_URN"), RWA_URN);
+        logJSONTuple(concatString(SYMBOL_LETTER, "_JAR"), RWA_JAR);
+        logJSONTuple(concatString(SYMBOL_LETTER, "_OUTPUT_CONDUIT"), RWA_OUTPUT_CONDUIT);
+        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_URN"), RWA_INPUT_CONDUIT_URN);
+        logJSONTuple(concatString(SYMBOL_LETTER, "_INPUT_CONDUIT_JAR"), RWA_INPUT_CONDUIT_JAR);
     }
 
     function getEnvAddressRequired(string memory name) internal returns (address) {
@@ -168,7 +169,20 @@ contract RWA007Deployment is Script {
 
     }
 
+    function logJSONTuple(string memory key, address value) internal {
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', vm.toString(value), '"]')));
+
+    }
+
     function concatString(string memory s1, string memory s2) internal pure returns (string memory) {
         return string(abi.encodePacked(s1, s2));
     }
+}
+
+interface Changelog {
+    function getAddress(bytes32 what) external returns (address);
+}
+
+interface JoinFab {
+    function newAuthGemJoin(address owner, bytes32 ilk, address gem) external returns (address);
 }
