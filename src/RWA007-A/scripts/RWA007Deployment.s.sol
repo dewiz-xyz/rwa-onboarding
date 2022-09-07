@@ -3,15 +3,15 @@ pragma solidity 0.6.12;
 
 import "forge-std/Script.sol";
 
-import 'mip21-toolkit/tokens/RwaTokenFactory.sol';
-import 'mip21-toolkit/tokens/RwaToken.sol';
-import 'mip21-toolkit/urns/RwaUrn2.sol';
-import 'mip21-toolkit/conduits/RwaOutputConduit3.sol';
-import 'mip21-toolkit/conduits/RwaInputConduit3.sol';
-import 'mip21-toolkit/jars/RwaJar.sol';
-import 'mip21-toolkit/oracles/RwaLiquidationOracle.sol';
-import 'dss-gem-joins/join-auth.sol';
-import 'forward-proxy/ForwardProxy.sol';
+import "mip21-toolkit/tokens/RwaTokenFactory.sol";
+import "mip21-toolkit/tokens/RwaToken.sol";
+import "mip21-toolkit/urns/RwaUrn2.sol";
+import "mip21-toolkit/conduits/RwaOutputConduit3.sol";
+import "mip21-toolkit/conduits/RwaInputConduit3.sol";
+import "mip21-toolkit/jars/RwaJar.sol";
+import "mip21-toolkit/oracles/RwaLiquidationOracle.sol";
+import "dss-gem-joins/join-auth.sol";
+import "forward-proxy/ForwardProxy.sol";
 
 contract RWA007Deployment is Script {
     address immutable MCD_PAUSE_PROXY;
@@ -29,6 +29,7 @@ contract RWA007Deployment is Script {
     string LETTER;
     string SYMBOL_LETTER;
 
+    bytes ILK_ENCODED;
     bytes32 immutable ILK;
 
     event Result(address RwaToken);
@@ -48,7 +49,8 @@ contract RWA007Deployment is Script {
         LETTER                    = getEnvStringRequired("LETTER");
         SYMBOL_LETTER             = string(abi.encodePacked(SYMBOL, "_", LETTER));
 
-        ILK                       = bytesToBytes32(abi.encodePacked(SYMBOL, string("-"), LETTER));
+        ILK_ENCODED               = abi.encodePacked(SYMBOL, string("-"), LETTER);
+        ILK                       = bytesToBytes32(ILK_ENCODED);
 
     }
 
@@ -120,7 +122,7 @@ contract RWA007Deployment is Script {
 
         logJSONTuple("SYMBOL", SYMBOL);
         logJSONTuple("NAME", NAME);
-        logJSONTuple("ILK", string(abi.encodePacked(SYMBOL, string("-"), LETTER)));
+        logJSONTuple("ILK", ILK_ENCODED);
         logJSONTuple(SYMBOL, RWA_TOKEN);
         logJSONTuple(concatString("MCD_JOIN_", SYMBOL_LETTER), RWA_JOIN);
         logJSONTuple(concatString(SYMBOL_LETTER, "_URN"), RWA_URN);
@@ -165,12 +167,17 @@ contract RWA007Deployment is Script {
     }
 
     function logJSONTuple(string memory key, string memory value) internal {
-        console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
+        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", value, "\"]")));
 
     }
 
     function logJSONTuple(string memory key, address value) internal {
-        console2.log(vm.toString(abi.encodePacked('["', key, '","', vm.toString(value), '"]')));
+        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", vm.toString(value), "\"]")));
+
+    }
+
+     function logJSONTuple(string memory key, bytes memory value) internal {
+        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", value, "\"]")));
 
     }
 

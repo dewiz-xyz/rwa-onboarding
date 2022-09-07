@@ -37,7 +37,8 @@ FORGE_SCRIPT="${BASH_SOURCE%/*}/../../../scripts/forge-script.sh"
 
 # estimate
 [ "$ESTIMATE" = "true" ] && {
-    $FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment"
+    RESPONSE=$($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment" | tee >(cat 1>&2))
+    jq -R 'fromjson? | .logs | .[]' <<<"$RESPONSE" | xargs -I@ cast --to-ascii @ | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
     exit 0
 }
 
