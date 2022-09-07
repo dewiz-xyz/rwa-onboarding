@@ -33,25 +33,25 @@ contract RWA007Deployment is Script {
     bytes32 immutable ILK;
 
     event Result(address RwaToken);
+
     constructor() public {
-        CHANGELOG                 = Changelog(getEnvAddressRequired("CHANGELOG"));
-        MCD_PAUSE_PROXY           = CHANGELOG.getAddress(bytes32("MCD_PAUSE_PROXY"));
-        MCD_DAI                   = CHANGELOG.getAddress(bytes32("MCD_DAI"));
-        MCD_VAT                   = CHANGELOG.getAddress(bytes32("MCD_VAT"));
-        MCD_JUG                   = CHANGELOG.getAddress(bytes32("MCD_JUG"));
-        MCD_JOIN_DAI              = CHANGELOG.getAddress(bytes32("MCD_JOIN_DAI"));
-        MCD_PSM_USDC_A            = CHANGELOG.getAddress(bytes32("MCD_PSM_USDC_A"));
-        RWA_TOKEN_FAB             = RwaTokenFactory(CHANGELOG.getAddress(bytes32("RWA_TOKEN_FAB")));
-        JOIN_FAB                  = JoinFab(CHANGELOG.getAddress(bytes32("JOIN_FAB")));
+        CHANGELOG = Changelog(getEnvAddressRequired("CHANGELOG"));
+        MCD_PAUSE_PROXY = CHANGELOG.getAddress(bytes32("MCD_PAUSE_PROXY"));
+        MCD_DAI = CHANGELOG.getAddress(bytes32("MCD_DAI"));
+        MCD_VAT = CHANGELOG.getAddress(bytes32("MCD_VAT"));
+        MCD_JUG = CHANGELOG.getAddress(bytes32("MCD_JUG"));
+        MCD_JOIN_DAI = CHANGELOG.getAddress(bytes32("MCD_JOIN_DAI"));
+        MCD_PSM_USDC_A = CHANGELOG.getAddress(bytes32("MCD_PSM_USDC_A"));
+        RWA_TOKEN_FAB = RwaTokenFactory(CHANGELOG.getAddress(bytes32("RWA_TOKEN_FAB")));
+        JOIN_FAB = JoinFab(CHANGELOG.getAddress(bytes32("JOIN_FAB")));
 
-        NAME                      = getEnvStringRequired("NAME");
-        SYMBOL                    = getEnvStringRequired("SYMBOL");
-        LETTER                    = getEnvStringRequired("LETTER");
-        SYMBOL_LETTER             = string(abi.encodePacked(SYMBOL, "_", LETTER));
+        NAME = getEnvStringRequired("NAME");
+        SYMBOL = getEnvStringRequired("SYMBOL");
+        LETTER = getEnvStringRequired("LETTER");
+        SYMBOL_LETTER = string(abi.encodePacked(SYMBOL, "_", LETTER));
 
-        ILK_ENCODED               = abi.encodePacked(SYMBOL, string("-"), LETTER);
-        ILK                       = bytesToBytes32(ILK_ENCODED);
-
+        ILK_ENCODED = abi.encodePacked(SYMBOL, string("-"), LETTER);
+        ILK = bytesToBytes32(ILK_ENCODED);
     }
 
     function run() external {
@@ -66,18 +66,18 @@ contract RWA007Deployment is Script {
         // join it
         address RWA_JOIN = getEnvAddress("RWA_JOIN");
         if (RWA_JOIN == address(0)) {
-            RWA_JOIN =  JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
+            RWA_JOIN = JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, ILK, RWA_TOKEN);
         }
 
         // route it
         address RWA_OUTPUT_CONDUIT = getEnvAddress("RWA_OUTPUT_CONDUIT");
         if (RWA_OUTPUT_CONDUIT == address(0)) {
-            RwaOutputConduit3 outputC =  new RwaOutputConduit3(MCD_PSM_USDC_A);
+            RwaOutputConduit3 outputC = new RwaOutputConduit3(MCD_PSM_USDC_A);
             outputC.rely(MCD_PAUSE_PROXY);
 
             RWA_OUTPUT_CONDUIT = address(outputC);
         }
-        
+
         // urn it
         address RWA_URN = getEnvAddress("RWA_URN");
         if (RWA_URN == address(0)) {
@@ -117,7 +117,7 @@ contract RWA007Deployment is Script {
 
             RWA_INPUT_CONDUIT_URN = address(inputCUrn);
         }
-        
+
         vm.stopBroadcast();
 
         logJSONTuple("SYMBOL", SYMBOL);
@@ -167,18 +167,18 @@ contract RWA007Deployment is Script {
     }
 
     function logJSONTuple(string memory key, string memory value) internal {
-        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", value, "\"]")));
-
+        // solhint-disable-next-line quotes
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
     }
 
     function logJSONTuple(string memory key, address value) internal {
-        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", vm.toString(value), "\"]")));
-
+        // solhint-disable-next-line quotes
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', vm.toString(value), '"]')));
     }
 
-     function logJSONTuple(string memory key, bytes memory value) internal {
-        console2.log(vm.toString(abi.encodePacked("[\"", key, "\",\"", value, "\"]")));
-
+    function logJSONTuple(string memory key, bytes memory value) internal {
+        // solhint-disable-next-line quotes
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
     }
 
     function concatString(string memory s1, string memory s2) internal pure returns (string memory) {
@@ -191,5 +191,9 @@ interface Changelog {
 }
 
 interface JoinFab {
-    function newAuthGemJoin(address owner, bytes32 ilk, address gem) external returns (address);
+    function newAuthGemJoin(
+        address owner,
+        bytes32 ilk,
+        address gem
+    ) external returns (address);
 }
