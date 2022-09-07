@@ -15,6 +15,12 @@ This repo containe scripts for RWA deals onboarding
 make update
 ```
 
+### Install build dependencies
+
+```
+make nodejs-deps
+```
+
 ### Build contracts
 
 ```
