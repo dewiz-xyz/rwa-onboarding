@@ -35,7 +35,7 @@ This script outputs a JSON file like this one:
   "MCD_JOIN_${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}": "<address>",
   "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_URN": "<address>",
   "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_JAR": "<address>",
-  "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_OUTPUT_CONDUIT": "<address>",
+  "${{TOKEN_SYMBOL}}_${{TOKEN_LETTER}}_OUTPUT_CONDUIT": "<address>"
 }
 ```
 

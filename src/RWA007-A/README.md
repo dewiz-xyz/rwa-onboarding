@@ -35,7 +35,7 @@ This script outputs a JSON file like this one:
   "RWA007_A_JAR": "<address>",
   "RWA007_A_OUTPUT_CONDUIT": "<address>",
   "RWA007_A_INPUT_CONDUIT_JAR": "<address>",
-  "RWA007_A_INPUT_CONDUIT_URN": "<address>",
+  "RWA007_A_INPUT_CONDUIT_URN": "<address>"
 }
 ```
 

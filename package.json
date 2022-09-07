@@ -14,7 +14,7 @@
     "lint": "run-s solhint prettier",
     "lint:check": "run-s prettier:check solhint:check",
     "prettier": "yarn prettier:check --write",
-    "prettier:check": "prettier --check \"src/**/*.sol\"",
+    "prettier:check": "prettier --check .",
     "solhint": "yarn solhint:check --fix",
     "solhint:check": "solhint \"src/**/*.sol\""
   },
@@ -29,7 +29,6 @@
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "^0.0.5"
   },
-
   "lint-staged": {
     "*.{js,css,md,sol}": "prettier --write"
   }

@@ -1,1 +1,7 @@
 lib/
+out/
+broadcast/
+vscode/
+.vscode/
+.github/
+cache/
