@@ -29,7 +29,6 @@ contract RWA007Deployment is Script {
     string LETTER;
     string SYMBOL_LETTER;
 
-    bytes ILK_ENCODED;
     bytes32 immutable ILK;
 
     event Result(address RwaToken);
@@ -50,8 +49,7 @@ contract RWA007Deployment is Script {
         LETTER = getEnvStringRequired("LETTER");
         SYMBOL_LETTER = string(abi.encodePacked(SYMBOL, "_", LETTER));
 
-        ILK_ENCODED = abi.encodePacked(SYMBOL, string("-"), LETTER);
-        ILK = bytesToBytes32(ILK_ENCODED);
+        ILK = bytesToBytes32(abi.encodePacked(SYMBOL, string("-"), LETTER));
     }
 
     function run() external {
@@ -122,7 +120,7 @@ contract RWA007Deployment is Script {
 
         logJSONTuple("SYMBOL", SYMBOL);
         logJSONTuple("NAME", NAME);
-        logJSONTuple("ILK", ILK_ENCODED);
+        logJSONTuple("ILK", ILK);
         logJSONTuple(SYMBOL, RWA_TOKEN);
         logJSONTuple(concatString("MCD_JOIN_", SYMBOL_LETTER), RWA_JOIN);
         logJSONTuple(concatString(SYMBOL_LETTER, "_URN"), RWA_URN);
@@ -156,16 +154,6 @@ contract RWA007Deployment is Script {
         }
     }
 
-    function bytesToBytes32(bytes memory data) internal pure returns (bytes32 result) {
-        if (data.length == 0) {
-            return 0x0;
-        }
-
-        assembly {
-            result := mload(add(data, 32))
-        }
-    }
-
     function logJSONTuple(string memory key, string memory value) internal {
         // solhint-disable-next-line quotes
         console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
@@ -176,13 +164,48 @@ contract RWA007Deployment is Script {
         console2.log(vm.toString(abi.encodePacked('["', key, '","', vm.toString(value), '"]')));
     }
 
-    function logJSONTuple(string memory key, bytes memory value) internal {
+    function logJSONTuple(string memory key, bytes32 value) internal {
         // solhint-disable-next-line quotes
-        console2.log(vm.toString(abi.encodePacked('["', key, '","', value, '"]')));
+        console2.log(vm.toString(abi.encodePacked('["', key, '","', bytes32ToString2(value), '"]')));
     }
 
     function concatString(string memory s1, string memory s2) internal pure returns (string memory) {
         return string(abi.encodePacked(s1, s2));
+    }
+
+    function bytesToBytes32(bytes memory data) internal pure returns (bytes32 result) {
+        if (data.length == 0) {
+            return 0x0;
+        }
+
+        assembly {
+            result := mload(add(data, 32))
+        }
+    }
+
+    function bytes32ToString(bytes32 src) internal pure returns (string memory) {
+        bytes memory dst = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            if (src[i] == 0) break;
+            dst[i] = src[i];
+        }
+        return string(dst);
+    }
+
+    function bytes32ToString2(bytes32 src) internal pure returns (string memory result) {
+        uint8 length = 0;
+        while (src[length] != 0 && length < 32) {
+            length++;
+        }
+        assembly {
+            result := mload(0x40)
+            // new "memory end" including padding (the string isn't larger than 32 bytes)
+            mstore(0x40, add(result, 0x40))
+            // store length in memory
+            mstore(result, length)
+            // write actual data
+            mstore(add(result, 0x20), src)
+        }
     }
 }
 
