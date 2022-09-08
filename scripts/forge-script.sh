@@ -15,31 +15,34 @@ deploy() {
   check-required-etherscan-api-key
 
   # Log the command being issued, making sure not to expose the password
-  log "forge script --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --gas-price $ETH_GAS --gas-limit $FOUNDRY_GAS_LIMIT --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" $(sed 's/ .*$/ [REDACTED]/' <<<"${PASSWORD_OPT[@]}")" $(printf ' %q' "$@")
+  log "forge script --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" $(sed 's/ .*$/ [REDACTED]/' <<<"${PASSWORD_OPT[@]}")" $(printf ' %q' "$@")
   # Currently `forge script` sends the logs to stdout instead of stderr.
   # This makes it hard to compose its output with other commands, so here we are:
   # 1. Duplicating stdout to stderr through `tee`
   # 2. Extracting only the address of the deployed contract to stdout
-  forge script  --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --gas-price $ETH_GAS --gas-limit $FOUNDRY_GAS_LIMIT --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" "${PASSWORD_OPT[@]}" "$@"
+  forge script  --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" "${PASSWORD_OPT[@]}" "$@"
 }
 
 check-required-etherscan-api-key() {
   # Require the Etherscan API Key if --verify option is enabled
   set +e
   if grep -- '--verify' <<<"$@" >/dev/null; then
-    [ -n "$FOUNDRY_ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
+    [ -n "$ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
   fi
   set -e
 }
 
 usage() {
   cat <<MSG
-forge-script.sh [<src>:]<contract> 
+forge-script.sh [<src>:]<contract> [...options]
 
 Examples:
 
-    # deploy
+    # simulate deployment
     forge-script.sh script/DeployGoerli.s.sol:Goerli
+
+    # deploy
+    forge-script.sh script/DeployGoerli.s.sol:Goerli --broadcast
 MSG
 }
 
