@@ -30,7 +30,7 @@ check-required-etherscan-api-key() {
   # Require the Etherscan API Key if --verify option is enabled
   set +e
   if grep -- '--verify' <<<"$@" >/dev/null; then
-    [ -n "$FOUNDRY_ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
+    [ -n "$ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
   fi
   set -e
 }

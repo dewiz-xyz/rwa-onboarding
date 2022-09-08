@@ -26,7 +26,7 @@ function verify() {
 }
 
 function check-required-etherscan-api-key() {
-  [ -n "$FOUNDRY_ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
+  [ -n "$ETHERSCAN_API_KEY" ] || die "$(err-msg-etherscan-api-key)"
 }
 
 function usage() {
