@@ -10,12 +10,7 @@ source "${BASH_SOURCE%/*}/../../../scripts/_common.sh"
 NETWORK=$1
 [[ "$NETWORK" && ("$NETWORK" == "mainnet" || "$NETWORK" == "goerli" || "$NETWORK" == "ces-goerli") ]] || die "Please set NETWORK to one of ('mainnet', 'goerli', 'ces-goerli')"
 
-declare -A SETH_CHAINS
-SETH_CHAINS['mainnet']='ethlive'
-SETH_CHAINS['goerli']='goerli'
-SETH_CHAINS['ces-goerli']='goerli'
-
-[[ "$ETH_RPC_URL" && "$(seth chain)" == "${SETH_CHAINS[$NETWORK]}" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+check-network $NETWORK
 
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/../../../scripts/build-env-addresses.sh" $NETWORK >&2
