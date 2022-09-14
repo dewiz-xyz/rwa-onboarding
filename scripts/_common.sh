@@ -85,7 +85,7 @@ check-network() {
       ;;
 
     "ces-goerli")
-      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goelri" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
       ;;
 
     *)
