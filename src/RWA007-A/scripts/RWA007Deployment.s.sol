@@ -89,7 +89,7 @@ contract RWA007Deployment is Script {
 
             RWA_URN = address(urn);
 
-            // Set _quitTo address to the URN and deny deplyer
+            // Set _quitTo address to the URN and deny deployer
             RwaOutputConduit3(RWA_OUTPUT_CONDUIT).file("quitTo", RWA_URN);
             RwaOutputConduit3(RWA_OUTPUT_CONDUIT).deny(msg.sender);
         }
