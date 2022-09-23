@@ -129,7 +129,7 @@ debug "${SYMBOL}: ${RWA_TOKEN}"
 
 # Verify the contracts
 # Verification is a no-op if the contracts are already verified
-$FORGE_VERIFY $RWA_TOKEN ${Ttoken} --constructor-args \
+$FORGE_VERIFY $RWA_TOKEN ${Token} --constructor-args \
 	$(cast abi-encode 'x(string,string)' "$NAME" "$SYMBOL") >&2
 
 $FORGE_VERIFY $RWA_URN ${Urn} --constructor-args \

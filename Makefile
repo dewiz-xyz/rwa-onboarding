@@ -13,9 +13,9 @@ solc:; nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA
 
 build:; forge build
 
-estimate:; ./scripts/estimate-gas.sh ${file} ${contract} ${args}
+estimate:; ./src/${ILK}/scripts/deploy.sh ${NETWORK} --estimate
 
-size:; ./scripts/contract-size.sh ${file} ${contract} ${args}
+deploy:; ./src/${ILK}/scripts/deploy.sh ${NETWORK}
 
 # mainnet
 deploy-mainnet:; ./src/${ILK}/scripts/deploy-mainnet.sh
@@ -24,6 +24,6 @@ deploy-goerli:; ./src/${ILK}/scripts/deploy-goerli.sh
 # goerli CES fork
 deploy-ces-goerli:; ./src/${ILK}/scripts/deploy-ces-goerli.sh
 
-test:; forge test --match-path src/${ILK}/contract/**.t.sol # --ffi # enable if you need the `ffi` cheat code on HEVM
+test:; forge test --match-path "src/${ILK}/contract/**.t.sol" # --ffi # enable if you need the `ffi` cheat code on HEVM
 
 create-onboarding:; ./scripts/create-onboarding.sh ${ILK_NUMBER} ${ILK_LETTER}

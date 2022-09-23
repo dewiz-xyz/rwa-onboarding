@@ -25,7 +25,11 @@ normalize-env-vars() {
   export FOUNDRY_ETH_FROM="${FOUNDRY_ETH_FROM:-$ETH_FROM}"
   export FOUNDRY_ETH_KEYSTORE_DIR="${FOUNDRY_ETH_KEYSTORE_DIR:-$ETH_KEYSTORE}"
   export FOUNDRY_ETH_PASSWORD_FILE="${FOUNDRY_ETH_PASSWORD_FILE:-$ETH_PASSWORD}"
-  export FOUNDRY_GAS_LIMIT="${FOUNDRY_GAS_LIMIT:-${ETH_GAS:-2500000}}"
+  export FOUNDRY_GAS_LIMIT="${FOUNDRY_GAS_LIMIT:-$ETH_GAS}"
+
+  if [ -z "$FOUNDRY_GAS_LIMIT" ]; then
+    unset FOUNDRY_GAS_LIMIT
+  fi
 
   if [ -z "$FOUNDRY_ETH_KEYSTORE_FILE" ]; then
     [ -z "$FOUNDRY_ETH_KEYSTORE_DIR" ] && die "$(err-msg-keystore-file)"
@@ -38,10 +42,6 @@ normalize-env-vars() {
   fi
 
   [ -n "$FOUNDRY_ETH_KEYSTORE_FILE" ] || die "$(err-msg-keystore-file)"
-
-  export FOUNDRY_ETHERSCAN_API_KEY="${FOUNDRY_ETHERSCAN_API_KEY:-$ETHERSCAN_API_KEY}"
-  # Some commands require the prefixed env var, while others require the unprefixed one.
-  export ETHERSCAN_API_KEY="$FOUNDRY_ETHERSCAN_API_KEY"
 }
 
 # Handle reading from the password file
@@ -69,4 +69,27 @@ You should either:
 \t1. Not use the --verify flag or;
 \t2. Define the ETHERSCAN_API_KEY env var.
 MSG
+}
+
+# Check connected network
+check-network() {
+  NETWORK=$1
+  case $NETWORK in
+
+    "mainnet")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "ethlive" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    "goerli")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    "ces-goerli")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    *)
+      die "Unknown network "${NETWORK}""
+      ;;
+  esac
 }

@@ -33,4 +33,4 @@
 	url = https://github.com/dapphub/ds-test
 [submodule "lib/mip21-toolkit"]
 	path = lib/mip21-toolkit
-	url = https://github.com/clio-finance/mip21-toolkit
+	url = https://github.com/makerdao/mip21-toolkit

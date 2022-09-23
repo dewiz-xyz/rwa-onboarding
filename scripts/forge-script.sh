@@ -14,16 +14,13 @@ deploy() {
 
   check-required-etherscan-api-key
 
-  local RESPONSE=
   # Log the command being issued, making sure not to expose the password
-  log "forge create --json --gas-limit $FOUNDRY_GAS_LIMIT --keystore="$FOUNDRY_ETH_KEYSTORE_FILE" $(sed 's/ .*$/ [REDACTED]/' <<<"${PASSWORD_OPT[@]}")" $(printf ' %q' "$@")
-  # Currently `forge create` sends the logs to stdout instead of stderr.
+  log "forge script --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" $(sed 's/ .*$/ [REDACTED]/' <<<"${PASSWORD_OPT[@]}")" $(printf ' %q' "$@")
+  # Currently `forge script` sends the logs to stdout instead of stderr.
   # This makes it hard to compose its output with other commands, so here we are:
   # 1. Duplicating stdout to stderr through `tee`
   # 2. Extracting only the address of the deployed contract to stdout
-  RESPONSE=$(forge create --json --gas-limit $FOUNDRY_GAS_LIMIT --keystore="$FOUNDRY_ETH_KEYSTORE_FILE" "${PASSWORD_OPT[@]}" "$@" | tee >(cat 1>&2))
-
-  jq -Rr 'fromjson? | .deployedTo' <<<"$RESPONSE"
+  forge script  --json --sender $ETH_FROM --rpc-url $ETH_RPC_URL --keystores="$FOUNDRY_ETH_KEYSTORE_FILE" "${PASSWORD_OPT[@]}" "$@"
 }
 
 check-required-etherscan-api-key() {
@@ -37,15 +34,15 @@ check-required-etherscan-api-key() {
 
 usage() {
   cat <<MSG
-forge-deploy.sh [<file>:]<contract> [ --verify ] [ --constructor-args ...args ]
+forge-script.sh [<src>:]<contract> [...options]
 
 Examples:
 
-    # Constructor does not take any arguments
-    forge-deploy.sh src/MyContract.sol:MyContract --verify
+    # simulate deployment
+    forge-script.sh script/DeployGoerli.s.sol:Goerli
 
-    # Constructor takes (uint, address) arguments
-    forge-deploy.sh src/MyContract.sol:MyContract --verify --constructor-args 1 0x0000000000000000000000000000000000000000
+    # deploy
+    forge-script.sh script/DeployGoerli.s.sol:Goerli --broadcast
 MSG
 }
 
