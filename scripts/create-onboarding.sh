@@ -52,22 +52,17 @@ createOnboarding() {
     cp -R $TEMPLATE_DIR $ONBOARDING_DIR
         
     # Rename TOKEN_SYMBOL, TOKEN_NAME and ILK_LETTER in deployment script and README
-    sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/scripts/deploy-goerli.sh"
-    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/scripts/deploy-goerli.sh"
-    sed -i "" -e "s/\${{ILK_LETTER}}/$ILK_LETTER/g" "$ONBOARDING_DIR/scripts/deploy-goerli.sh"
-
-    sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/scripts/deploy-mainnet.sh"
-    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/scripts/deploy-mainnet.sh"
-    sed -i "" -e "s/\${{ILK_LETTER}}/$ILK_LETTER/g" "$ONBOARDING_DIR/scripts/deploy-mainnet.sh"
-
-    sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/scripts/deploy-ces-goerli.sh"
-    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/scripts/deploy-ces-goerli.sh"
-    sed -i "" -e "s/\${{ILK_LETTER}}/$ILK_LETTER/g" "$ONBOARDING_DIR/scripts/deploy-ces-goerli.sh"
+    sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/scripts/deploy.sh"
+    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/scripts/deploy.sh"
+    sed -i "" -e "s/\${{ILK_LETTER}}/$ILK_LETTER/g" "$ONBOARDING_DIR/scripts/deploy.sh"
 
     sed -i "" -e "s/\${{ILK}}/$ILK/g" "$ONBOARDING_DIR/README.md"
     sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/README.md"
     sed -i "" -e "s/\${{TOKEN_LETTER}}/$TOKEN_LETTER/g" "$ONBOARDING_DIR/README.md"
     sed -i "" -e "s/\${{TOKEN_NAME}}/$TOKEN_NAME/g" "$ONBOARDING_DIR/README.md"
+
+    sed -i "" -e "s/\${{TOKEN_SYMBOL}}/$TOKEN_SYMBOL/g" "$ONBOARDING_DIR/scripts/Deployment.s.sol"
+    mv "$ONBOARDING_DIR/scripts/Deployment.s.sol" "$ONBOARDING_DIR/scripts/${TOKEN_SYMBOL}Deployment.s.sol"
 
     logSuccess "Onboarding for $ILK created!"
 }
