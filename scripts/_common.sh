@@ -70,3 +70,26 @@ You should either:
 \t2. Define the ETHERSCAN_API_KEY env var.
 MSG
 }
+
+# Check connected network
+check-network() {
+  NETWORK=$1
+  case $NETWORK in
+
+    "mainnet")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "ethlive" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    "goerli")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    "ces-goerli")
+      [[ "$ETH_RPC_URL" && "$(seth chain)" == "goerli" ]] || die "Please set a "${NETWORK}" ETH_RPC_URL"
+      ;;
+
+    *)
+      die "Unknown network "${NETWORK}""
+      ;;
+  esac
+}
