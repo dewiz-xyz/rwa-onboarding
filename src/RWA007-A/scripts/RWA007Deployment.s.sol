@@ -11,6 +11,8 @@ import {RwaUrn2} from "mip21-toolkit/urns/RwaUrn2.sol";
 import {RwaOutputConduit3} from "mip21-toolkit/conduits/RwaOutputConduit3.sol";
 import {RwaInputConduit3} from "mip21-toolkit/conduits/RwaInputConduit3.sol";
 import {RwaJar} from "mip21-toolkit/jars/RwaJar.sol";
+import {GemJoinAbstract} from "dss-interfaces/dss/GemJoinAbstract.sol";
+import {PsmAbstract} from "dss-interfaces/dss/PsmAbstract.sol";
 
 contract RWA007Deployment is Script {
     string NAME;
@@ -48,6 +50,8 @@ contract RWA007Deployment is Script {
     }
 
     function run() external {
+        address GEM = GemJoinAbstract(PsmAbstract(MCD_PSM_USDC_A).gemJoin()).gem();
+
         vm.startBroadcast();
 
         // tokenize it
@@ -65,7 +69,7 @@ contract RWA007Deployment is Script {
         // route it
         address RWA_OUTPUT_CONDUIT = envAddressOptional("RWA_OUTPUT_CONDUIT");
         if (RWA_OUTPUT_CONDUIT == address(0)) {
-            RwaOutputConduit3 outputC = new RwaOutputConduit3(MCD_PSM_USDC_A);
+            RwaOutputConduit3 outputC = new RwaOutputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A);
             outputC.rely(MCD_PAUSE_PROXY);
 
             RWA_OUTPUT_CONDUIT = address(outputC);
@@ -94,7 +98,7 @@ contract RWA007Deployment is Script {
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = envAddressOptional("RWA_INPUT_CONDUIT_JAR");
         if (RWA_INPUT_CONDUIT_JAR == address(0)) {
-            RwaInputConduit3 inputCJar = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_JAR);
+            RwaInputConduit3 inputCJar = new RwaInputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_JAR);
             inputCJar.rely(MCD_PAUSE_PROXY);
             inputCJar.deny(msg.sender);
 
@@ -104,7 +108,7 @@ contract RWA007Deployment is Script {
         // route it URN
         address RWA_INPUT_CONDUIT_URN = envAddressOptional("RWA_INPUT_CONDUIT_URN");
         if (RWA_INPUT_CONDUIT_URN == address(0)) {
-            RwaInputConduit3 inputCUrn = new RwaInputConduit3(MCD_PSM_USDC_A, RWA_URN);
+            RwaInputConduit3 inputCUrn = new RwaInputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_URN);
             inputCUrn.rely(MCD_PAUSE_PROXY);
             inputCUrn.deny(msg.sender);
 
