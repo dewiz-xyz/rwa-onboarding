@@ -1,6 +1,8 @@
 # RWA007-A
 
-Onboarding [RWA007-A](TODO)
+Onboarding RWA007-A Monetalis Clydesdale.
+
+Find [architecture and technical assessment here.](https://github.com/clio-finance/rwa-onboarding/blob/master/src/RWA007-A/tech_assessment.md)
 
 ### Install lib dependencies
 
