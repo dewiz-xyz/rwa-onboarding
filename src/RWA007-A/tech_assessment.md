@@ -1,3 +1,5 @@
+# [RWA007] MIP65 Monetalis Clydesdale/CES Domain Team Assessment
+
 ## Risk Summary/Key Takeaways
 
 -   The technical smart contract risk is considered LOW, as it will be using standard MIP21 contracts with slightly modified Conduits that allow for swapping Dai through the PSM.
@@ -19,7 +21,7 @@
     
 -   **Ilk Registry Name:** RWA007-A: Monetalis Clydesdale
     
--   **Total Supply:** 1
+-   **Total Supply:** 1 WAD (1 * 10 ^ 18)
     
 -   **Relevant MIP Information:**
 
@@ -27,11 +29,9 @@
 	    
 	-   [MIP21: Real World Assets – Off-Chain Asset Backed Lender](https://mips.makerdao.com/mips/details/MIP21#sentence-summary)
 
-	- [MIP65 Counterparties Community Assessment](https://forum.makerdao.com/t/mip65-counterparties-community-assessment/17786)
-
 -   **Monetalis Website:** https://monetalis.io/
 
--   **Github Repository:** https://github.com/makerdao/mip21-toolkit
+-   **Github Repository:** https://github.com/clio-finance/mip21-toolkit
 
 -   **Collateral Type Adapter:** The collateral will use the MIP21 [authed join and exit functions](https://github.com/makerdao/dss-gem-joins/blob/c2ba746fd45593136475aa5e308a57db87e7eb7f/src/join-auth.sol).
 
@@ -88,7 +88,7 @@
 
 -   Therefore it is recommended that the Trustee (James Asset (PTC) Limited itself managed by Riverfront Capital Ltd) receive and manage their funds through a professional custody provider. Each operation should be validated by an independent third party, Hatstone.
 
--   Furthermore CES recommends that the debt ceiling is drawn down gradually in increments which ensures the amount of “funds in transit” is always below the surplus buffer in the worst case scenario where the USDC is lost before being invested. Therefore a debt ceiling instant access module to gradually increase the debt ceiling to achieve the gradual drawdown will be utilized.
+-   Furthermore CES recommends that the debt ceiling is drawn down gradually in increments which ensures the amount of “funds in transit” is always below the surplus buffer in the worst case scenario where the USDC is lost before being invested. Therefore a debt ceiling instant access module to gradually increase the debt ceiling to achieve the gradual drawdown is recommended.
 
 -   A test of 1M Dai will be executed to validate the entire transaction flow, before initiating incrementally drawing down the full 250M Dai.
 
@@ -108,7 +108,7 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 ### Setting up the vault
 
--   Deploy contracts:
+-   Deploy contracts
 
 	-   RwaUrn
 
@@ -123,7 +123,7 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 	-   RwaJar (for fee repayments)
 
 
--   Deploy executive spell which:
+-   Deploy and ratify executive spell which
 
 	-   Sets all risk parameters for the vault (see table in “Transaction Outline” above)
 
@@ -168,7 +168,7 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 -   Repeat until the debt ceiling is maxed.
 
-![](upload://i1L1J4L2tSR11X6MmxyL8ornHHh.png)
+![](https://i.imgur.com/pOE6AJo.png)
 
 ### Paying vault fees/profit share
 
@@ -176,9 +176,9 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 -   Anyone can call `void`, to transfer Dai in the RwaJar contract to the surplus buffer
 
-![](upload://j8i1vEPpXyuHSwDGBJzn3NQOlS6.png)
+![](https://i.imgur.com/5brfVkJ.png)
 
-![](upload://13VPcSMzVYs0fwKQsjCd2n4rzHm.png)
+![](https://i.imgur.com/5yUzKdw.png)
 
 ### Paying back principal
 
@@ -186,9 +186,9 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 -   Anyone can call `wipe` on the RwaUrn, to pay back the Dai debt.
 
-![](upload://jFGUT5safh3hHWIvGi3BQL6Gurt.png)
+![](https://i.imgur.com/OOB7NQV.png)
 
-![](upload://znzt3WdM2aZfvbZ9IzZhDHQsaQ4.png)
+![](https://i.imgur.com/69QMVsY.png)
 
 ### Liquidations & Losses
 
@@ -212,7 +212,7 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 -   The fact that this contract is not live in production yet is not a blocker to initiate the vault, as existing RWA also lacks this easy onchain redeem functionality in case of ES. The plan is to deploy this contract for MIP65 as soon as it is ready.
 
-![](upload://2vrmU0ll1duGB6DEFD0U1BViorp.png)
+![](https://i.imgur.com/x6RK2BU.png)
 
 
 ## Architecture
@@ -465,12 +465,12 @@ The only addition required to the MIP21 suite of contracts is the addition of th
 
 #### Inheritance Graph
 There are no inherited contracts in the MIP21 contacts (excluding tests).
-![](upload://6cGLA9g9LxLbxpnl3a2b3wFtDKU.png)
+![](https://i.imgur.com/p6PzkxR.png)
 
 
 #### Call Graph
-![](upload://aYTp92QR3tZC51jqaZOGkW4vO2w.jpeg)
+![](https://i.imgur.com/9WW4dEI.jpg)
 
 
 #### Interaction Graph
-![](upload://xTZT6uDUjNXIxlV3ugYu2hAeevN.jpeg)
+![](https://i.imgur.com/igkWM93.png)
