@@ -2,6 +2,8 @@
 
 Repository for onboarding SocGen's [OFH](https://forum.makerdao.com/t/security-tokens-refinancing-mip6-application-for-ofh-tokens/10605/8) to MCD.
 
+Find [architecture and technical assessment here.](https://github.com/clio-finance/rwa-onboarding/blob/master/src/RWA008-A/tech_assessment.md)
+
 ## Install lib dependencies
 
 ```bash
