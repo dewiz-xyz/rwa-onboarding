@@ -4,6 +4,7 @@ This repo containe scripts for RWA deals onboarding
 
 ## Content
 
+- [RWA007-A (Monetalis Clydesdale)](https://github.com/clio-finance/rwa-onboarding/tree/master/src/RWA007-A)
 - [RWA008-A (SocGen)](https://github.com/clio-finance/rwa-onboarding/tree/master/src/RWA008-A)
 - [RWA009-A (HvB)](https://github.com/clio-finance/rwa-onboarding/tree/master/src/RWA009-A)
 
