@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
 import "forge-std/Script.sol";
 import {SolidityTypeConversions as stc} from "../../shared/SolidityTypeConversions.sol";

@@ -40,4 +40,13 @@ library Strings {
     ) external pure returns (string memory) {
         return string(abi.encodePacked(s1, sep, s2));
     }
+
+    /**
+     * @dev Checks whether a string is empty or not.
+     * @param s The string.
+     * @return The concatenated string.
+     */
+    function isEmpty(string memory s) external pure returns (bool) {
+        return bytes(s).length == 0;
+    }
 }
