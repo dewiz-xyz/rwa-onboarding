@@ -145,7 +145,6 @@ contract Rwa010_013Deployment is Script {
         address rwaOperator = deps.mgr;
 
         address rwaUrn = address(new RwaUrn(MCD_VAT, MCD_JUG, rwaJoin, MCD_JOIN_DAI, rwaOutputConduit));
-        // RwaUrn(rwaUrn).hope(rwaOperator);
         RwaUrn(rwaUrn).rely(MCD_PAUSE_PROXY);
         RwaUrn(rwaUrn).deny(msg.sender);
 
