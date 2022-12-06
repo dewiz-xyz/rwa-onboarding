@@ -80,7 +80,7 @@ contract Rwa010_013Deployment is Script {
         tinlakeManagers[CHAIN_ID_GOERLI][RWA013] = 0xc5A1418aC32B5f978460f1211B76B5D44e69B530;
     }
 
-    function run() external {
+    function run() external returns (Components[] memory) {
         uint256 _chainid;
         assembly {
             _chainid := chainid()
@@ -88,7 +88,9 @@ contract Rwa010_013Deployment is Script {
 
         vm.startBroadcast();
 
-        deployComponents(
+        Components[] memory result = new Components[](4);
+
+        result[0] = deployComponents(
             DeployDependencies({
                 name: names[RWA010],
                 symbol: RWA010,
@@ -98,7 +100,7 @@ contract Rwa010_013Deployment is Script {
             })
         );
 
-        deployComponents(
+        result[1] = deployComponents(
             DeployDependencies({
                 name: names[RWA011],
                 symbol: RWA011,
@@ -108,7 +110,7 @@ contract Rwa010_013Deployment is Script {
             })
         );
 
-        deployComponents(
+        result[2] = deployComponents(
             DeployDependencies({
                 name: names[RWA012],
                 symbol: RWA012,
@@ -118,7 +120,7 @@ contract Rwa010_013Deployment is Script {
             })
         );
 
-        deployComponents(
+        result[3] = deployComponents(
             DeployDependencies({
                 name: names[RWA013],
                 symbol: RWA013,
@@ -129,9 +131,11 @@ contract Rwa010_013Deployment is Script {
         );
 
         vm.stopBroadcast();
+
+        return result;
     }
 
-    function deployComponents(DeployDependencies memory deps) internal {
+    function deployComponents(DeployDependencies memory deps) internal returns (Components memory) {
         address rwaToken = address(RWA_TOKEN_FAB.createRwaToken(deps.name, deps.symbol, MCD_PAUSE_PROXY));
 
         address rwaJoin = JOIN_FAB.newAuthGemJoin(MCD_PAUSE_PROXY, deps.ilk, rwaToken);
@@ -151,6 +155,16 @@ contract Rwa010_013Deployment is Script {
         logJSONTuple(s.concat(deps.symbolLetter, "_OUTPUT_CONDUIT"), rwaOutputConduit);
         logJSONTuple(s.concat(deps.symbolLetter, "_INPUT_CONDUIT"), rwaInputConduit);
         logJSONTuple(s.concat(deps.symbolLetter, "_OPERATOR"), rwaOperator);
+
+        return
+            Components({
+                gem: rwaToken,
+                gemJoin: rwaJoin,
+                urn: rwaUrn,
+                inputConduit: rwaInputConduit,
+                outputConduit: rwaOutputConduit,
+                operator: rwaOperator
+            });
     }
 
     function envAddressOptional(string memory name) internal view returns (address) {
@@ -172,6 +186,15 @@ contract Rwa010_013Deployment is Script {
     function logJSONTuple(string memory key, bytes32 value) internal view {
         console2.log(jf.toPair(key, value));
     }
+}
+
+struct Components {
+    address gem;
+    address gemJoin;
+    address urn;
+    address inputConduit;
+    address outputConduit;
+    address operator;
 }
 
 interface Changelog {

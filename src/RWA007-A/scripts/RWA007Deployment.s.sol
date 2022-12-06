@@ -9,8 +9,8 @@ import {Strings as s} from "../../shared/Strings.sol";
 
 import {RwaTokenFactory} from "mip21-toolkit/tokens/RwaTokenFactory.sol";
 import {RwaUrn2} from "mip21-toolkit/urns/RwaUrn2.sol";
-import {RwaOutputConduit3} from "mip21-toolkit/conduits/RwaOutputConduit3.sol";
-import {RwaInputConduit3} from "mip21-toolkit/conduits/RwaInputConduit3.sol";
+import {RwaSwapOutputConduit} from "mip21-toolkit/conduits/RwaSwapOutputConduit.sol";
+import {RwaSwapInputConduit} from "mip21-toolkit/conduits/RwaSwapInputConduit.sol";
 import {RwaJar} from "mip21-toolkit/jars/RwaJar.sol";
 import {GemJoinAbstract} from "dss-interfaces/dss/GemJoinAbstract.sol";
 import {PsmAbstract} from "dss-interfaces/dss/PsmAbstract.sol";
@@ -70,7 +70,7 @@ contract RWA007Deployment is Script {
         // route it
         address RWA_OUTPUT_CONDUIT = envAddressOptional("RWA_OUTPUT_CONDUIT");
         if (RWA_OUTPUT_CONDUIT == address(0)) {
-            RwaOutputConduit3 outputC = new RwaOutputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A);
+            RwaSwapOutputConduit outputC = new RwaSwapOutputConduit(MCD_DAI, GEM, MCD_PSM_USDC_A);
             outputC.rely(MCD_PAUSE_PROXY);
 
             RWA_OUTPUT_CONDUIT = address(outputC);
@@ -86,8 +86,8 @@ contract RWA007Deployment is Script {
             RWA_URN = address(urn);
 
             // Set _quitTo address to the URN and deny deplyer
-            RwaOutputConduit3(RWA_OUTPUT_CONDUIT).file("quitTo", RWA_URN);
-            RwaOutputConduit3(RWA_OUTPUT_CONDUIT).deny(msg.sender);
+            RwaSwapOutputConduit(RWA_OUTPUT_CONDUIT).file("quitTo", RWA_URN);
+            RwaSwapOutputConduit(RWA_OUTPUT_CONDUIT).deny(msg.sender);
         }
 
         // jar it
@@ -99,7 +99,7 @@ contract RWA007Deployment is Script {
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = envAddressOptional("RWA_INPUT_CONDUIT_JAR");
         if (RWA_INPUT_CONDUIT_JAR == address(0)) {
-            RwaInputConduit3 inputCJar = new RwaInputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_JAR);
+            RwaSwapInputConduit inputCJar = new RwaSwapInputConduit(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_JAR);
             inputCJar.rely(MCD_PAUSE_PROXY);
             inputCJar.deny(msg.sender);
 
@@ -109,7 +109,7 @@ contract RWA007Deployment is Script {
         // route it URN
         address RWA_INPUT_CONDUIT_URN = envAddressOptional("RWA_INPUT_CONDUIT_URN");
         if (RWA_INPUT_CONDUIT_URN == address(0)) {
-            RwaInputConduit3 inputCUrn = new RwaInputConduit3(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_URN);
+            RwaSwapInputConduit inputCUrn = new RwaSwapInputConduit(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_URN);
             inputCUrn.rely(MCD_PAUSE_PROXY);
             inputCUrn.deny(msg.sender);
 
