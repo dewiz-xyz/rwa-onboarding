@@ -8,9 +8,6 @@ set -eo pipefail
 source "${BASH_SOURCE%/*}/../../../scripts/_common.sh"
 
 NETWORK=$1
-shift
-ARGS="$@"
-
 [[ "$NETWORK" && ("$NETWORK" == "mainnet" || "$NETWORK" == "goerli" || "$NETWORK" == "ces-goerli") ]] || die "Please set NETWORK to one of ('mainnet', 'goerli', 'ces-goerli')"
 
 check-network $NETWORK
@@ -18,8 +15,8 @@ check-network $NETWORK
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/../../../scripts/build-env-addresses.sh" $NETWORK >&2
 
-[[ -z "$NAME" ]] && export NAME="RWA-007"
-[[ -z "$SYMBOL" ]] && export SYMBOL="RWA007"
+[[ -z "$NAME" ]] && export NAME="RWA-014"
+[[ -z "$SYMBOL" ]] && export SYMBOL="RWA014"
 #
 # WARNING (2021-09-08): The system cannot currently accomodate any LETTER beyond
 # "A".  To add more letters, we will need to update the PIP naming convention
@@ -38,13 +35,13 @@ FORGE_SCRIPT="${BASH_SOURCE%/*}/../../../scripts/forge-script.sh"
 
 # estimate
 [ "$ESTIMATE" = "true" ] && {
-    RESPONSE=$($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment" $ARGS tee >(cat 1>&2))
-    jq -R 'fromjson? | .logs | .[]' <<<"$RESPONSE" | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
-    exit 0
+	RESPONSE=$($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA014Deployment.s.sol:RWA014Deployment" | tee >(cat 1>&2))
+	jq -R 'fromjson? | .logs | .[] | fromjson?' <<<"$RESPONSE" | jq -s 'map( {(.[0]): .[1]} ) | add'
+	exit 0
 }
 
-RESPONSE=$($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA007Deployment.s.sol:RWA007Deployment" --broadcast --slow --verify --retries 10 $ARGS | tee >(cat 1>&2))
-jq -R 'fromjson? | .logs | .[]' <<<"$RESPONSE" | jq -R 'fromjson?' | jq -s 'map( {(.[0]): .[1]} ) | add'
+RESPONSE=$($FORGE_SCRIPT "${BASH_SOURCE%/*}/RWA014Deployment.s.sol:RWA014Deployment" --broadcast --slow --verify --retries 10 | tee >(cat 1>&2))
+jq -R 'fromjson? | .logs | .[] | fromjson?' <<<"$RESPONSE" | jq -s 'map( {(.[0]): .[1]} ) | add'
 
 # IF we hit block limit we need to parse output from previouse command and set deployed addresses to the ENV (hopefully Foundry will fix vm.setEnv wich we can use for that)
 # Then we can simply run another method of Deployment contract and pick up this ENV vars there using `--sig "secondPartOfDeployment()"` flag of `forge script` command

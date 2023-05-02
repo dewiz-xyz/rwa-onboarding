@@ -10,12 +10,12 @@ import {Strings as s} from "../../shared/Strings.sol";
 import {RwaTokenFactory} from "mip21-toolkit/tokens/RwaTokenFactory.sol";
 import {RwaUrn2} from "mip21-toolkit/urns/RwaUrn2.sol";
 import {RwaSwapOutputConduit} from "mip21-toolkit/conduits/RwaSwapOutputConduit.sol";
-import {RwaSwapInputConduit} from "mip21-toolkit/conduits/RwaSwapInputConduit.sol";
+import {RwaSwapInputConduit2} from "mip21-toolkit/conduits/RwaSwapInputConduit2.sol";
 import {RwaJar} from "mip21-toolkit/jars/RwaJar.sol";
 import {GemJoinAbstract} from "dss-interfaces/dss/GemJoinAbstract.sol";
 import {PsmAbstract} from "dss-interfaces/dss/PsmAbstract.sol";
 
-contract RWA007Deployment is Script {
+contract RWA014Deployment is Script {
     string NAME;
     string SYMBOL;
     string LETTER;
@@ -99,7 +99,7 @@ contract RWA007Deployment is Script {
         // route it JAR
         address RWA_INPUT_CONDUIT_JAR = envAddressOptional("RWA_INPUT_CONDUIT_JAR");
         if (RWA_INPUT_CONDUIT_JAR == address(0)) {
-            RwaSwapInputConduit inputCJar = new RwaSwapInputConduit(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_JAR);
+            RwaSwapInputConduit2 inputCJar = new RwaSwapInputConduit2(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_JAR);
             inputCJar.rely(MCD_PAUSE_PROXY);
             inputCJar.deny(msg.sender);
 
@@ -109,7 +109,7 @@ contract RWA007Deployment is Script {
         // route it URN
         address RWA_INPUT_CONDUIT_URN = envAddressOptional("RWA_INPUT_CONDUIT_URN");
         if (RWA_INPUT_CONDUIT_URN == address(0)) {
-            RwaSwapInputConduit inputCUrn = new RwaSwapInputConduit(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_URN);
+            RwaSwapInputConduit2 inputCUrn = new RwaSwapInputConduit2(MCD_DAI, GEM, MCD_PSM_USDC_A, RWA_URN);
             inputCUrn.rely(MCD_PAUSE_PROXY);
             inputCUrn.deny(msg.sender);
 
@@ -132,7 +132,7 @@ contract RWA007Deployment is Script {
 
     // TODO: maybe move the functions below to an abtract contract...
 
-    function envAddressOptional(string memory name) internal returns (address) {
+    function envAddressOptional(string memory name) internal view returns (address) {
         try vm.envAddress(name) {
             return vm.envAddress(name);
         } catch {
