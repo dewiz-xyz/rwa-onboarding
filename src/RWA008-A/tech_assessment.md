@@ -1,5 +1,4 @@
-
-# [RWA008] OFH/MIP21 Token CES Domain Team Assessment 
+# [RWA008] OFH/MIP21 Token CES Domain Team Assessment
 
 ## General Information
 
@@ -9,38 +8,38 @@ This assessment deviates from the standard smart contract technical assessment f
 
 In summary, due to the simple and risk contained nature of the proposed system, and the fact that the majority of the components are already used in production **these smart contracts are considered low risk.**
 
--   **Symbol:** RWA008
--   **Token Name:** RWA-008
--   **Ilk Registry name: RWA008-A: SG Forge OFH**
--   **Relevant MIP information:**
-    -   [[Security Tokens Refinancing] MIP6 Application for OFH Tokens](https://forum.makerdao.com/t/security-tokens-refinancing-mip6-application-for-ofh-tokens/10605)
-    -   [MIP21: Real World Assets - Off-Chain Asset Backed Lender](https://forum.makerdao.com/t/mip21-real-world-assets-off-chain-asset-backed-lender/3917)
--   **Total supply:** 1 WAD (1 * 10 ^ 18)
--   **Does the contract implement the ERC20 token standards?** Yes.
--   **RWA institutional website:** [societegenerale.com](https://www.societegenerale.com/)
--   **RWA project website:** [OFH press release](https://www.societegenerale.com/en/news/newsroom/societe-generale-issued-first-covered-bond-security-token-public-blockchain)
--   **Github repository:**
-    -   [](https://github.com/clio-finance/socgen-ofh-onboarding)[https://github.com/clio-finance/socgen-ofh-onboarding](https://github.com/clio-finance/socgen-ofh-onboarding)
-    -   [](https://github.com/clio-finance/mip21-toolkit)[https://github.com/clio-finance/mip21-toolkit](https://github.com/clio-finance/mip21-toolkit)
--   **Can use an existing MCD collateral type adapter?** Yes, this collateral uses the MIP21 [authed join and exit functions](https://github.com/makerdao/dss-gem-joins/blob/c2ba746fd45593136475aa5e308a57db87e7eb7f/src/join-auth.sol).
+- **Symbol:** RWA008
+- **Token Name:** RWA-008
+- **Ilk Registry name: RWA008-A: SG Forge OFH**
+- **Relevant MIP information:**
+  - [[Security Tokens Refinancing] MIP6 Application for OFH Tokens](https://forum.makerdao.com/t/security-tokens-refinancing-mip6-application-for-ofh-tokens/10605)
+  - [MIP21: Real World Assets - Off-Chain Asset Backed Lender](https://forum.makerdao.com/t/mip21-real-world-assets-off-chain-asset-backed-lender/3917)
+- **Total supply:** 1 WAD (1 \* 10 ^ 18)
+- **Does the contract implement the ERC20 token standards?** Yes.
+- **RWA institutional website:** [societegenerale.com](https://www.societegenerale.com/)
+- **RWA project website:** [OFH press release](https://www.societegenerale.com/en/news/newsroom/societe-generale-issued-first-covered-bond-security-token-public-blockchain)
+- **Github repository:**
+  - [](https://github.com/clio-finance/socgen-ofh-onboarding)[https://github.com/clio-finance/socgen-ofh-onboarding](https://github.com/clio-finance/socgen-ofh-onboarding)
+  - [](https://github.com/clio-finance/mip21-toolkit)[https://github.com/clio-finance/mip21-toolkit](https://github.com/clio-finance/mip21-toolkit)
+- **Can use an existing MCD collateral type adapter?** Yes, this collateral uses the MIP21 [authed join and exit functions](https://github.com/makerdao/dss-gem-joins/blob/c2ba746fd45593136475aa5e308a57db87e7eb7f/src/join-auth.sol).
 
 ## Technical Information
 
--   **Does the contract implement the ERC20 token standards?** Yes.
--   **Compiler version:** `solidity:0.6.12`
--   **Decimals:** 18.
--   **Overflow checks:** No.
--   **Overflow checks:** Yes.
--   **Mitigation against allowance race-condition:** No.
--   **Upgradeable contract patterns:** No.
--   **Access control or restriction lists:** No.
--   **Non-standard features or behaviors:** No.
--   **Key addresses:**
-    -   The `auth` governance address for `RwaInputConduit`, `RwaLiquidationOracle` and `RwaUrn` contracts.
-    -   The `operator` address that is permitted to operate on the `RwaInputConduit` and `RwaUrn` contracts. This can be multiple addresses, however, each address must be approved by governance.
-    -   The `mate` address controlled by the security agent DIIS Group that is permitted to call `push()` on the `RwaInputConduit` and `RwaOutputConduit` to transfer Dai in and out of the conduits respectively, but does not have any privileges within the token contract itself.
--   **Additional notes:**
-    -   While there are no overflow checks, no use of a SafeMath library, and no mitigation against the allowance race-condition, the idiosyncratic nature of the contract does not make them a requirement.
+- **Does the contract implement the ERC20 token standards?** Yes.
+- **Compiler version:** `solidity:0.6.12`
+- **Decimals:** 18.
+- **Overflow checks:** No.
+- **Overflow checks:** Yes.
+- **Mitigation against allowance race-condition:** No.
+- **Upgradeable contract patterns:** No.
+- **Access control or restriction lists:** No.
+- **Non-standard features or behaviors:** No.
+- **Key addresses:**
+  - The `auth` governance address for `RwaInputConduit`, `RwaLiquidationOracle` and `RwaUrn` contracts.
+  - The `operator` address that is permitted to operate on the `RwaInputConduit` and `RwaUrn` contracts. This can be multiple addresses, however, each address must be approved by governance.
+  - The `mate` address controlled by the security agent DIIS Group that is permitted to call `push()` on the `RwaInputConduit` and `RwaOutputConduit` to transfer Dai in and out of the conduits respectively, but does not have any privileges within the token contract itself.
+- **Additional notes:**
+  - While there are no overflow checks, no use of a SafeMath library, and no mitigation against the allowance race-condition, the idiosyncratic nature of the contract does not make them a requirement.
 
 ## Implementation Design Rationale
 
@@ -54,13 +53,13 @@ Since OFH tokens will not be onboarded directly into the Maker Protocol, SGF wil
 
 #### SocGen OFH Token
 
--   Closed source. Has been thoroughly reviewed by the Collateral Engineering Services Core Unit under the supervision of the Protocol Engineering Core Unit.
--   Does not conform to ERC20 standard, meaning it cannot be onboarded directly into the Maker Protocol.
--   Lacks allowance mechanisms as well as race-conditions mitigation and a `transferFrom()` method.
--   Indivisible (0 decimals).
--   Would not function properly during Emergency Shutdown if onboarded directly into the Maker Protocol, due to the lack of conformity with the ERC20 standard.
--   Complex token semantics and logic.
--   Because of the bullet points above, the OFH token will not be onboarded directly into the Maker Protocol. Instead, a RWA-008 token will be utilized in the Maker Protocol to enable Dai generation, similarly to other MIP21-style vaults. As described above, in addition SGF will transfer OFH tokens to the RWAUrn which will hold the tokens while the Vault is active. The Pledge will further evidence Maker’s interest the OFH token.
+- Closed source. Has been thoroughly reviewed by the Collateral Engineering Services Core Unit under the supervision of the Protocol Engineering Core Unit.
+- Does not conform to ERC20 standard, meaning it cannot be onboarded directly into the Maker Protocol.
+- Lacks allowance mechanisms as well as race-conditions mitigation and a `transferFrom()` method.
+- Indivisible (0 decimals).
+- Would not function properly during Emergency Shutdown if onboarded directly into the Maker Protocol, due to the lack of conformity with the ERC20 standard.
+- Complex token semantics and logic.
+- Because of the bullet points above, the OFH token will not be onboarded directly into the Maker Protocol. Instead, a RWA-008 token will be utilized in the Maker Protocol to enable Dai generation, similarly to other MIP21-style vaults. As described above, in addition SGF will transfer OFH tokens to the RWAUrn which will hold the tokens while the Vault is active. The Pledge will further evidence Maker’s interest the OFH token.
 
 #### MIP21 Contracts
 
@@ -68,18 +67,18 @@ MIP21 is the component that prevents the borrower from minting more Dai than the
 
 The core RWA architecture consists of the following contracts:
 
--   RwaToken
--   RwaUrn
--   RwaConduit
--   RwaLiquidationOracle
+- RwaToken
+- RwaUrn
+- RwaConduit
+- RwaLiquidationOracle
 
 #### MIP21 Modifications
 
 Minor modifications were made to the standard MIP21 technical implementation to meet the operational and legal requirements of the parties:
 
--   The MKR balance requirement to transfer Dai in and out of the `RwaConduit` via `push()` was replaced with a simple whitelist. DIIS Group, the security agent of this agreement, will be the whitelisted actor to call this function. SocGen will also be whitelisted as a backup for technical reasons, but does not intend to use the function under normal use for legal reasons.
--   Removed the need for Maker Governance to whitelist recipients (`to`) of “pushed” Dai in the `RwaOutputConduit`. This means that Maker Governance does not need to approve recipients of Dai generated from the vault in an executive spell, instead we leave this to the discretion of SocGen to decide freely where to route generated Dai.
--   Modified the `exit` function to allow the operator of the `RwaUrn` (SocGen) to withdraw Dai deposited into `RwaUrn` to the `RwaOutputConduit`, e.g. in case excess Dai is deposited by accident. Previously this function could only be called during emergency shutdown. However, if SocGen by accident were to send more Dai than their outstanding debt, there is no easy way to recover the excess Dai. Even in the instance they pay back Dai to the `RwaUrn`, but decide they do not want to repay their loan yet, there is no way to transfer the Dai back from the `RwaUrn`, thus the only way to get Dai back would be to pay down the debt and generate new Dai. This change in the function makes the operation of the vault more flexible, and removes some potential operational issues, without introducing additional risks.
+- The MKR balance requirement to transfer Dai in and out of the `RwaConduit` via `push()` was replaced with a simple whitelist. DIIS Group, the security agent of this agreement, will be the whitelisted actor to call this function. SocGen will also be whitelisted as a backup for technical reasons, but does not intend to use the function under normal use for legal reasons.
+- Removed the need for Maker Governance to whitelist recipients (`to`) of “pushed” Dai in the `RwaOutputConduit`. This means that Maker Governance does not need to approve recipients of Dai generated from the vault in an executive spell, instead we leave this to the discretion of SocGen to decide freely where to route generated Dai.
+- Modified the `exit` function to allow the operator of the `RwaUrn` (SocGen) to withdraw Dai deposited into `RwaUrn` to the `RwaOutputConduit`, e.g. in case excess Dai is deposited by accident. Previously this function could only be called during emergency shutdown. However, if SocGen by accident were to send more Dai than their outstanding debt, there is no easy way to recover the excess Dai. Even in the instance they pay back Dai to the `RwaUrn`, but decide they do not want to repay their loan yet, there is no way to transfer the Dai back from the `RwaUrn`, thus the only way to get Dai back would be to pay down the debt and generate new Dai. This change in the function makes the operation of the vault more flexible, and removes some potential operational issues, without introducing additional risks.
 
 These changes are simple in nature and were done under the supervision of the Protocol Engineering Core Unit, and does not impose any added technical risk to the Maker Protocol itself.
 
@@ -91,9 +90,9 @@ A standard implementation of the ERC20 token standard, with the `balanceOf(addre
 
 There are three state changing functions, that are all available to the tokenholder, and are specific to the ERC20 token standard:
 
--   `transfer(address dst, uint wad) external returns (bool);`
--   `transferFrom(address src, address dst, uint wad) public returns (bool);`
--   `approve(address usr, uint wad) external returns (bool);`
+- `transfer(address dst, uint wad) external returns (bool);`
+- `transferFrom(address src, address dst, uint wad) public returns (bool);`
+- `approve(address usr, uint wad) external returns (bool);`
 
 #### RwaUrn
 
@@ -101,12 +100,12 @@ There are three state changing functions, that are all available to the tokenhol
 
 The `RwaUrn` is unique to each MIP21 collateral type. Aside from the core DSS `wards`, `can`, `rely(address)`, `deny(address)`, `hope(address)`, and `nope(address)` functions, there are five functions:
 
--   `file(bytes32,address)`
--   `lock(uint256)`
--   `free(uint256)`
--   `draw(uint256)`
--   `wipe(uint256)`
--   `exit(uint256)`
+- `file(bytes32,address)`
+- `lock(uint256)`
+- `free(uint256)`
+- `draw(uint256)`
+- `wipe(uint256)`
+- `exit(uint256)`
 
 The `file` function can only be called by governance (via the `auth` modifier).
 
@@ -122,9 +121,9 @@ The `RwaInputConduit` and `RwaOutputConduit` are two simple contracts aimed at h
 
 `RwaOutputConduit` has two main functions: `pick(address)` and `push()`.
 
--   `pick(address)` can be called by actors who have been whitelisted using `hope(address)` to specify an Ethereum address that Dai should be routed to.
--   The `push()` function holds transitory funds, that upon being called, are transferred to the `to` address set using the `pick(address)`.
-    -   **Note:** The `push()` function has been modified from standard MIP21, and can now only be called by actors who have been whitelisted using the `mate(address)`function - in this case DIIS Group and SG Forge. Furthermore, it is no longer necessary for Maker Governance to authorize the `to` address through `kiss`. In this implementation, we allow SGF to send the generated Dai to whichever address they desire, with no limitation from Maker Governance.
+- `pick(address)` can be called by actors who have been whitelisted using `hope(address)` to specify an Ethereum address that Dai should be routed to.
+- The `push()` function holds transitory funds, that upon being called, are transferred to the `to` address set using the `pick(address)`.
+  - **Note:** The `push()` function has been modified from standard MIP21, and can now only be called by actors who have been whitelisted using the `mate(address)`function - in this case DIIS Group and SG Forge. Furthermore, it is no longer necessary for Maker Governance to authorize the `to` address through `kiss`. In this implementation, we allow SGF to send the generated Dai to whichever address they desire, with no limitation from Maker Governance.
 
 `RwaInputConduit` functions in a very similar manner, but lacks the `pick(address)` method as routing of Dai can only happen to `RwaUrn`.
 
@@ -134,12 +133,12 @@ The `RwaInputConduit` and `RwaOutputConduit` are two simple contracts aimed at h
 
 The `RwaLiquidationOracle` contract consists of six state-changing functions (besides the usual DSS `rely(address)`, `deny(address)`), all protected by the auth modifier and can only be called by governance:
 
--   `file(bytes32,address)`
--   `init(bytes32 ilk,bytes32 val,address doc,uint48 tau)`
--   `bump(bytes32 ilk,uint256 val)`
--   `tell(bytes32)`
--   `cure(bytes32)`
--   `cull(bytes32)`
+- `file(bytes32,address)`
+- `init(bytes32 ilk,bytes32 val,address doc,uint48 tau)`
+- `bump(bytes32 ilk,uint256 val)`
+- `tell(bytes32)`
+- `cure(bytes32)`
+- `cull(bytes32)`
 
 There is one externally accessible view function called `good(bytes32)` that anyone can use to check the liquidation status of the position. This function does not change the contract state.
 
@@ -149,10 +148,10 @@ This is not a typical Maker oracle. It will only report on the liquidation statu
 
 `init` is the initialization function. It takes 4 parameters:
 
--   `ilk`: name of the vault, in this case, RWA008.
--   `val`: estimated value of the collateral token.
--   `doc`: link to legal documents representing the underlying legal scheme.
--   `tau`: minimum delay between the soft-liquidation and the hard-liquidation/write-off.
+- `ilk`: name of the vault, in this case, RWA008.
+- `val`: estimated value of the collateral token.
+- `doc`: link to legal documents representing the underlying legal scheme.
+- `tau`: minimum delay between the soft-liquidation and the hard-liquidation/write-off.
 
 `bump` can be called by governance to increase or decrease the estimated value of the collateral.
 
@@ -182,7 +181,6 @@ The figure above outlines the steps to borrow Dai.
 
 ![](https://i.imgur.com/fTvh29X.png)
 
-
 The figure above outlines the steps to repay Dai.
 
 **Step 1:** SGF transfers Dai to the `RwaInputConduit`.
@@ -201,9 +199,9 @@ The RWA code implementation resides within a sandbox-like environment, and any o
 
 Slight modifications were made to the standard MIP21 contract to support legal and operational requirements of the parties. These modifications were simple and do not present additional considerable complexity or liability to the contracts. To once again summarize the changes were:
 
--   Make `push` a whitelisted function in RWA Conduits.
--   Remove requirement for Maker Governance to whitelist recipient addresses of generated Dai
--   Allow `operator`s of the `RwaUrn` to withdraw Dai sitting in the contract to the `RwaOutputConduit`.
+- Make `push` a whitelisted function in RWA Conduits.
+- Remove requirement for Maker Governance to whitelist recipient addresses of generated Dai
+- Allow `operator`s of the `RwaUrn` to withdraw Dai sitting in the contract to the `RwaOutputConduit`.
 
 These changes are implemented in MIP21, which is already a sandboxed environment that does not have direct authorizations on the MCD core contracts, and thus does not pose any direct technical risks to the Maker Protocol Core itself.
 
@@ -225,98 +223,93 @@ Furthermore CES is deploying an onchain [RWA token factory](https://github.com/c
 
 #### Files Description Table
 
-
-|  File Name  |  SHA-1 Hash  |
-|-------------|--------------|
-| RwaInputConduit2.sol | 9bf23537fcb5cbce505aeaee14df3e273333e0f4 |
-| RwaOutputConduit2.sol | 3f7cbfa8b41239a3a74c8d95e50af936f565d7bd |
-| RwaToken.sol | 8d75732d93e0ad82a7bf3e0faf34550082291775 |
-| RwaUrn2.sol | ce511f510a5d456cf686a9f64a5b46a064043c31 |
+| File Name                | SHA-1 Hash                               |
+| ------------------------ | ---------------------------------------- |
+| RwaInputConduit2.sol     | 9bf23537fcb5cbce505aeaee14df3e273333e0f4 |
+| RwaOutputConduit2.sol    | 3f7cbfa8b41239a3a74c8d95e50af936f565d7bd |
+| RwaToken.sol             | 8d75732d93e0ad82a7bf3e0faf34550082291775 |
+| RwaUrn2.sol              | ce511f510a5d456cf686a9f64a5b46a064043c31 |
 | RwaLiquidationOracle.sol | 88c2b4fac899d39af0198c1fb4776171e4249c19 |
 
-
-
 #### Contracts Description Table
-```markdown
-|  Contract  |         Type        |       Bases      |                  |                 |
-|:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
-|     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
-||||||
-| **RwaInputConduit2** | Implementation |  |||
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
-| └ | rely | External ❗️ | 🛑  | auth |
-| └ | deny | External ❗️ | 🛑  | auth |
-| └ | mate | External ❗️ | 🛑  | auth |
-| └ | hate | External ❗️ | 🛑  | auth |
-| └ | push | External ❗️ | 🛑  |NO❗️ |
-||||||
-| **RwaOutputConduit2** | Implementation |  |||
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
-| └ | rely | External ❗️ | 🛑  | auth |
-| └ | deny | External ❗️ | 🛑  | auth |
-| └ | mate | External ❗️ | 🛑  | auth |
-| └ | hate | External ❗️ | 🛑  | auth |
-| └ | hope | External ❗️ | 🛑  | auth |
-| └ | nope | External ❗️ | 🛑  | auth |
-| └ | pick | Public ❗️ | 🛑  |NO❗️ |
-| └ | push | External ❗️ | 🛑  |NO❗️ |
-||||||
-| **RwaToken** | Implementation |  |||
-| └ | add | Internal 🔒 |   | |
-| └ | sub | Internal 🔒 |   | |
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
-| └ | transfer | External ❗️ | 🛑  |NO❗️ |
-| └ | transferFrom | Public ❗️ | 🛑  |NO❗️ |
-| └ | approve | External ❗️ | 🛑  |NO❗️ |
-||||||
-| **RwaUrn2** | Implementation |  |||
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
-| └ | rely | External ❗️ | 🛑  | auth |
-| └ | deny | External ❗️ | 🛑  | auth |
-| └ | hope | External ❗️ | 🛑  | auth |
-| └ | nope | External ❗️ | 🛑  | auth |
-| └ | file | External ❗️ | 🛑  | auth |
-| └ | lock | External ❗️ | 🛑  | operator |
-| └ | free | External ❗️ | 🛑  | operator |
-| └ | draw | External ❗️ | 🛑  | operator |
-| └ | wipe | External ❗️ | 🛑  |NO❗️ |
-| └ | quit | External ❗️ | 🛑  |NO❗️ |
-| └ | add | Internal 🔒 |   | |
-| └ | sub | Internal 🔒 |   | |
-| └ | mul | Internal 🔒 |   | |
-| └ | divup | Internal 🔒 |   | |
-| └ | rad | Internal 🔒 |   | |
-||||||
-| **RwaLiquidationOracle** | Implementation |  |||
-| └ | rely | External ❗️ | 🛑  | auth |
-| └ | deny | External ❗️ | 🛑  | auth |
-| └ | add | Internal 🔒 |   | |
-| └ | mul | Internal 🔒 |   | |
-| └ | <Constructor> | Public ❗️ | 🛑  |NO❗️ |
-| └ | file | External ❗️ | 🛑  | auth |
-| └ | init | External ❗️ | 🛑  | auth |
-| └ | bump | External ❗️ | 🛑  | auth |
-| └ | tell | External ❗️ | 🛑  | auth |
-| └ | cure | External ❗️ | 🛑  | auth |
-| └ | cull | External ❗️ | 🛑  | auth |
-| └ | good | External ❗️ |   |NO❗️ |
 
+```markdown
+|         Contract         |       Type        |     Bases      |                |               |
+| :----------------------: | :---------------: | :------------: | :------------: | :-----------: |
+|            └             | **Function Name** | **Visibility** | **Mutability** | **Modifiers** |
+|                          |                   |                |                |               |
+|   **RwaInputConduit2**   |  Implementation   |                |                |               |
+|            └             |   <Constructor>   |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |       rely        |  External ❗️  |       🛑       |     auth      |
+|            └             |       deny        |  External ❗️  |       🛑       |     auth      |
+|            └             |       mate        |  External ❗️  |       🛑       |     auth      |
+|            └             |       hate        |  External ❗️  |       🛑       |     auth      |
+|            └             |       push        |  External ❗️  |       🛑       |     NO❗️     |
+|                          |                   |                |                |               |
+|  **RwaOutputConduit2**   |  Implementation   |                |                |               |
+|            └             |   <Constructor>   |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |       rely        |  External ❗️  |       🛑       |     auth      |
+|            └             |       deny        |  External ❗️  |       🛑       |     auth      |
+|            └             |       mate        |  External ❗️  |       🛑       |     auth      |
+|            └             |       hate        |  External ❗️  |       🛑       |     auth      |
+|            └             |       hope        |  External ❗️  |       🛑       |     auth      |
+|            └             |       nope        |  External ❗️  |       🛑       |     auth      |
+|            └             |       pick        |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |       push        |  External ❗️  |       🛑       |     NO❗️     |
+|                          |                   |                |                |               |
+|       **RwaToken**       |  Implementation   |                |                |               |
+|            └             |        add        |  Internal 🔒   |                |               |
+|            └             |        sub        |  Internal 🔒   |                |               |
+|            └             |   <Constructor>   |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |     transfer      |  External ❗️  |       🛑       |     NO❗️     |
+|            └             |   transferFrom    |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |      approve      |  External ❗️  |       🛑       |     NO❗️     |
+|                          |                   |                |                |               |
+|       **RwaUrn2**        |  Implementation   |                |                |               |
+|            └             |   <Constructor>   |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |       rely        |  External ❗️  |       🛑       |     auth      |
+|            └             |       deny        |  External ❗️  |       🛑       |     auth      |
+|            └             |       hope        |  External ❗️  |       🛑       |     auth      |
+|            └             |       nope        |  External ❗️  |       🛑       |     auth      |
+|            └             |       file        |  External ❗️  |       🛑       |     auth      |
+|            └             |       lock        |  External ❗️  |       🛑       |   operator    |
+|            └             |       free        |  External ❗️  |       🛑       |   operator    |
+|            └             |       draw        |  External ❗️  |       🛑       |   operator    |
+|            └             |       wipe        |  External ❗️  |       🛑       |     NO❗️     |
+|            └             |       quit        |  External ❗️  |       🛑       |     NO❗️     |
+|            └             |        add        |  Internal 🔒   |                |               |
+|            └             |        sub        |  Internal 🔒   |                |               |
+|            └             |        mul        |  Internal 🔒   |                |               |
+|            └             |       divup       |  Internal 🔒   |                |               |
+|            └             |        rad        |  Internal 🔒   |                |               |
+|                          |                   |                |                |               |
+| **RwaLiquidationOracle** |  Implementation   |                |                |               |
+|            └             |       rely        |  External ❗️  |       🛑       |     auth      |
+|            └             |       deny        |  External ❗️  |       🛑       |     auth      |
+|            └             |        add        |  Internal 🔒   |                |               |
+|            └             |        mul        |  Internal 🔒   |                |               |
+|            └             |   <Constructor>   |   Public ❗️   |       🛑       |     NO❗️     |
+|            └             |       file        |  External ❗️  |       🛑       |     auth      |
+|            └             |       init        |  External ❗️  |       🛑       |     auth      |
+|            └             |       bump        |  External ❗️  |       🛑       |     auth      |
+|            └             |       tell        |  External ❗️  |       🛑       |     auth      |
+|            └             |       cure        |  External ❗️  |       🛑       |     auth      |
+|            └             |       cull        |  External ❗️  |       🛑       |     auth      |
+|            └             |       good        |  External ❗️  |                |     NO❗️     |
 ```
 
 #### Legend
 
-|  Symbol  |  Meaning  |
-|:--------:|-----------|
-|    🛑    | Function can modify state |
-|    💵    | Function is payable |
-
+| Symbol | Meaning                   |
+| :----: | ------------------------- |
+|   🛑   | Function can modify state |
+|   💵   | Function is payable       |
 
 #### Contract Inheritance Graph
 
 The smart contracts do not inherit other smart contracts.
 ![](https://i.imgur.com/axHkUDs.png)
 
-
-
 #### Contract Call Graph
+
 ![](https://i.imgur.com/ReaNMrI.png)
