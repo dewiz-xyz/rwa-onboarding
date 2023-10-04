@@ -7,11 +7,11 @@ import {SolidityTypeConversions as stc} from "../../shared/SolidityTypeConversio
 import {JsonFormatter as jf} from "../../shared/JsonFormatter.sol";
 import {Strings as s} from "../../shared/Strings.sol";
 
-import {RwaTokenFactory} from "mip21-toolkit/tokens/RwaTokenFactory.sol";
-import {RwaUrn2} from "mip21-toolkit/urns/RwaUrn2.sol";
-import {RwaSwapOutputConduit} from "mip21-toolkit/conduits/RwaSwapOutputConduit.sol";
-import {RwaSwapInputConduit2} from "mip21-toolkit/conduits/RwaSwapInputConduit2.sol";
-import {RwaJar} from "mip21-toolkit/jars/RwaJar.sol";
+import {RwaTokenFactory} from "rwa-toolkit/tokens/RwaTokenFactory.sol";
+import {RwaUrn2} from "rwa-toolkit/urns/RwaUrn2.sol";
+import {RwaSwapOutputConduit} from "rwa-toolkit/conduits/RwaSwapOutputConduit.sol";
+import {RwaSwapInputConduit2} from "rwa-toolkit/conduits/RwaSwapInputConduit2.sol";
+import {RwaJar} from "rwa-toolkit/jars/RwaJar.sol";
 import {GemJoinAbstract} from "dss-interfaces/dss/GemJoinAbstract.sol";
 import {PsmAbstract} from "dss-interfaces/dss/PsmAbstract.sol";
 

@@ -20,7 +20,7 @@ In summary, due to the simple and risk contained nature of the proposed system, 
 - **RWA project website:** [OFH press release](https://www.societegenerale.com/en/news/newsroom/societe-generale-issued-first-covered-bond-security-token-public-blockchain)
 - **Github repository:**
   - [](https://github.com/clio-finance/socgen-ofh-onboarding)[https://github.com/clio-finance/socgen-ofh-onboarding](https://github.com/clio-finance/socgen-ofh-onboarding)
-  - [](https://github.com/clio-finance/mip21-toolkit)[https://github.com/clio-finance/mip21-toolkit](https://github.com/clio-finance/mip21-toolkit)
+  - [](https://github.com/clio-finance/rwa-toolkit)[https://github.com/clio-finance/rwa-toolkit](https://github.com/clio-finance/rwa-toolkit)
 - **Can use an existing MCD collateral type adapter?** Yes, this collateral uses the MIP21 [authed join and exit functions](https://github.com/makerdao/dss-gem-joins/blob/c2ba746fd45593136475aa5e308a57db87e7eb7f/src/join-auth.sol).
 
 ## Technical Information
@@ -84,7 +84,7 @@ These changes are simple in nature and were done under the supervision of the Pr
 
 #### RwaToken
 
-[Source code](https://github.com/clio-finance/mip21-toolkit/blob/master/src/tokens/RwaToken.sol)
+[Source code](https://github.com/clio-finance/rwa-toolkit/blob/master/src/tokens/RwaToken.sol)
 
 A standard implementation of the ERC20 token standard, with the `balanceOf(address)` of the deployer of the contract being set to `1` WAD at deployment. There are 18 decimals of precision.
 
@@ -96,7 +96,7 @@ There are three state changing functions, that are all available to the tokenhol
 
 #### RwaUrn
 
-[Source code](https://github.com/clio-finance/mip21-toolkit/blob/master/src/urns/RwaUrn2.sol)
+[Source code](https://github.com/clio-finance/rwa-toolkit/blob/master/src/urns/RwaUrn2.sol)
 
 The `RwaUrn` is unique to each MIP21 collateral type. Aside from the core DSS `wards`, `can`, `rely(address)`, `deny(address)`, `hope(address)`, and `nope(address)` functions, there are five functions:
 
@@ -115,7 +115,7 @@ The rest of the functions can only be called by those who have been given `opera
 
 #### RwaConduits
 
-[Source code](https://github.com/clio-finance/mip21-toolkit/blob/master/src/conduits/RwaInputConduit2.sol)
+[Source code](https://github.com/clio-finance/rwa-toolkit/blob/master/src/conduits/RwaInputConduit2.sol)
 
 The `RwaInputConduit` and `RwaOutputConduit` are two simple contracts aimed at handling Dai routing.
 
@@ -129,7 +129,7 @@ The `RwaInputConduit` and `RwaOutputConduit` are two simple contracts aimed at h
 
 #### RwaLiquidationOracle
 
-[Source code](https://github.com/clio-finance/mip21-toolkit/blob/master/src/oracles/RwaLiquidationOracle.sol)
+[Source code](https://github.com/clio-finance/rwa-toolkit/blob/master/src/oracles/RwaLiquidationOracle.sol)
 
 The `RwaLiquidationOracle` contract consists of six state-changing functions (besides the usual DSS `rely(address)`, `deny(address)`), all protected by the auth modifier and can only be called by governance:
 
@@ -217,7 +217,7 @@ This tool will be actively used by SocGen and DIIS Group to manage on-chain proc
 
 CES has also created a contract called [RwaUrnProxyView](https://github.com/clio-finance/socgen-ofh-onboarding/blob/master/src/RwaUrnProxyView.sol), that help calculate accrued stability fee for a future timestamp. These functions are out of scope of the assessment, as they are only user facing and do not pose any technical risks directly to the Maker Protocol.
 
-Furthermore CES is deploying an onchain [RWA token factory](https://github.com/clio-finance/mip21-toolkit/blob/master/src/tokens/RwaTokenFactory.sol), to further automate the process of deploying MIP21-style loan agreements.
+Furthermore CES is deploying an onchain [RWA token factory](https://github.com/clio-finance/rwa-toolkit/blob/master/src/tokens/RwaTokenFactory.sol), to further automate the process of deploying MIP21-style loan agreements.
 
 ### Sūrya Description Report
 

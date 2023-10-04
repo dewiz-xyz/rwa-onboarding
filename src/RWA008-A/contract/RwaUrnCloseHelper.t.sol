@@ -28,12 +28,12 @@ import {Spotter} from "dss/spot.sol";
 import {DaiJoin} from "dss/join.sol";
 import {AuthGemJoin} from "dss-gem-joins/join-auth.sol";
 
-import {RwaToken} from "mip21-toolkit/tokens/RwaToken.sol";
-import {RwaInputConduit2} from "mip21-toolkit/conduits/RwaInputConduit2.sol";
-import {RwaOutputConduit2} from "mip21-toolkit/conduits/RwaOutputConduit2.sol";
-import {RwaLiquidationOracle} from "mip21-toolkit/oracles/RwaLiquidationOracle.sol";
-import {RwaUrn} from "mip21-toolkit/urns/RwaUrn.sol";
-import {RwaUrn2} from "mip21-toolkit/urns/RwaUrn2.sol";
+import {RwaToken} from "rwa-toolkit/tokens/RwaToken.sol";
+import {RwaInputConduit2} from "rwa-toolkit/conduits/RwaInputConduit2.sol";
+import {RwaOutputConduit2} from "rwa-toolkit/conduits/RwaOutputConduit2.sol";
+import {RwaLiquidationOracle} from "rwa-toolkit/oracles/RwaLiquidationOracle.sol";
+import {RwaUrn} from "rwa-toolkit/urns/RwaUrn.sol";
+import {RwaUrn2} from "rwa-toolkit/urns/RwaUrn2.sol";
 import {RwaUrnCloseHelper} from "./RwaUrnCloseHelper.sol";
 
 interface Hevm {

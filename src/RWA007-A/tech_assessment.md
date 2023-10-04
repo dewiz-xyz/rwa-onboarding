@@ -25,7 +25,7 @@
 
 - **Monetalis Website:** https://monetalis.io/
 
-- **Github Repository:** https://github.com/clio-finance/mip21-toolkit
+- **Github Repository:** https://github.com/clio-finance/rwa-toolkit
 
 - **Collateral Type Adapter:** The collateral will use the MIP21 [authed join and exit functions](https://github.com/makerdao/dss-gem-joins/blob/c2ba746fd45593136475aa5e308a57db87e7eb7f/src/join-auth.sol).
 
@@ -192,7 +192,7 @@ In order to support the operational flow of swapping Dai for USDC through the PS
 
 ### Emergency Shutdown
 
-- In case of Emergency Shutdown, the Trustee will start selling off the off chain assets for USDC and transfer USDC to a [new RwaCageSettlement contract](https://github.com/makerdao/mip21-toolkit/blob/master/src/cage/RwaCageSettlement.sol).
+- In case of Emergency Shutdown, the Trustee will start selling off the off chain assets for USDC and transfer USDC to a [new RwaCageSettlement contract](https://github.com/makerdao/rwa-toolkit/blob/master/src/cage/RwaCageSettlement.sol).
 
 - Dai holders will be able to redeem Dai for RWA007 tokens through the End module.
 
@@ -225,7 +225,7 @@ Summarized below is a summary of the MIP21 contracts which will be utilized.
 
 ## RwaToken
 
-[Source code](https://github.com/makerdao/mip21-toolkit/blob/master/src/tokens/RwaToken.sol)
+[Source code](https://github.com/makerdao/rwa-toolkit/blob/master/src/tokens/RwaToken.sol)
 
 A standard implementation of the ERC20 token standard, with the balanceOf(address) of the deployer of the contract being set to 1 WAD at deployment. There are 18 decimals of precision.
 
@@ -237,7 +237,7 @@ There are three state changing functions, that are all available to the token ho
 
 ## RwaUrn
 
-[Source code](https://github.com/makerdao/mip21-toolkit/blob/master/src/urns/RwaUrn2.so)
+[Source code](https://github.com/makerdao/rwa-toolkit/blob/master/src/urns/RwaUrn2.so)
 
 The RwaUrn is unique to each MIP21 collateral type. Aside from the core DSS wards, can, rely(address), deny(address), hope(address), and nope(address) functions, there are five functions:
 
@@ -259,9 +259,9 @@ The rest of the functions can only be called by those who have been given the op
 
 ## RwaSwapConduits
 
-[Source code](https://github.com/makerdao/mip21-toolkit/blob/master/src/conduits/RwaSwapInputConduit.sol) (InputConduit)
+[Source code](https://github.com/makerdao/rwa-toolkit/blob/master/src/conduits/RwaSwapInputConduit.sol) (InputConduit)
 
-[Source code](https://github.com/makerdao/mip21-toolkit/blob/master/src/conduits/RwaSwapOutputConduit.sol) (OutputConduit)
+[Source code](https://github.com/makerdao/rwa-toolkit/blob/master/src/conduits/RwaSwapOutputConduit.sol) (OutputConduit)
 
 The RwaInputConduit and RwaOutputConduit are two contracts aimed at handling Dai routing and automatic swapping with USDC using the PSM.
 
@@ -279,7 +279,7 @@ RwaSwapInputConduit functions in a very similar manner, but lacks the `pick(addr
 
 ## RwaLiquidationOracle
 
-[Source code](https://github.com/makerdao/mip21-toolkit/blob/master/src/oracles/RwaLiquidationOracle.sol)
+[Source code](https://github.com/makerdao/rwa-toolkit/blob/master/src/oracles/RwaLiquidationOracle.sol)
 
 The RwaLiquidationOracle contract consists of six state-changing functions (besides the usual DSS `rely(address)`, `deny(address)`), all protected by the `auth` modifier and can only be called by governance:
 
@@ -309,7 +309,7 @@ This is not a typical Maker Oracle. It will only report on the liquidation statu
 
 ## RwaJar
 
-[Source Code](https://github.com/makerdao/mip21-toolkit/blob/feat/rwa-jar/src/jars/RwaJar.sol)
+[Source Code](https://github.com/makerdao/rwa-toolkit/blob/feat/rwa-jar/src/jars/RwaJar.sol)
 
 The RWAJar contract is a permissionless contract - containing the following functions:
 
@@ -335,12 +335,12 @@ The only addition required to the MIP21 suite of contracts is the addition of th
 
 | File Name                                                     | SHA-1 Hash                               |
 | ------------------------------------------------------------- | ---------------------------------------- |
-| @makerdao/mip21-toolkit/src/tokens/RwaToken.sol               | 8d75732d93e0ad82a7bf3e0faf34550082291775 |
-| @makerdao/mip21-toolkit/src/urns/RwaUrn2.sol                  | ce511f510a5d456cf686a9f64a5b46a064043c31 |
-| @makerdao/mip21-toolkit/src/conduits/RwaSwapOutputConduit.sol | 911defea762e4e5e2940c719c06b29e65059e849 |
-| @makerdao/mip21-toolkit/src/conduits/RwaSwapInputConduit.sol  | 1c2137b4193893a2770519ed4e914f9db766667c |
-| @makerdao/mip21-toolkit/src/oracles/RwaLiquidationOracle.sol  | 88c2b4fac899d39af0198c1fb4776171e4249c19 |
-| @makerdao/mip21-toolkit/src/jars/RwaJar.sol                   | 8fbc97752a4535ec067601e5bf1cbb1ceb505ad3 |
+| @makerdao/rwa-toolkit/src/tokens/RwaToken.sol               | 8d75732d93e0ad82a7bf3e0faf34550082291775 |
+| @makerdao/rwa-toolkit/src/urns/RwaUrn2.sol                  | ce511f510a5d456cf686a9f64a5b46a064043c31 |
+| @makerdao/rwa-toolkit/src/conduits/RwaSwapOutputConduit.sol | 911defea762e4e5e2940c719c06b29e65059e849 |
+| @makerdao/rwa-toolkit/src/conduits/RwaSwapInputConduit.sol  | 1c2137b4193893a2770519ed4e914f9db766667c |
+| @makerdao/rwa-toolkit/src/oracles/RwaLiquidationOracle.sol  | 88c2b4fac899d39af0198c1fb4776171e4249c19 |
+| @makerdao/rwa-toolkit/src/jars/RwaJar.sol                   | 8fbc97752a4535ec067601e5bf1cbb1ceb505ad3 |
 
 #### Legend
 

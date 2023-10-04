@@ -66,3 +66,14 @@ You should either:
 \t2. Define the ETHERSCAN_API_KEY env var.
 MSG
 }
+
+check-network() {
+	local TARGET=$1
+	local CURRENT=$(cast chain)
+
+	[[ "$TARGET" == "$CURRENT" ]] && return 0;
+
+	[[ "$TARGET" == "mainnet" && "$CURRENT" == "ethlive" ]] && return 0;
+
+	return 1;
+}

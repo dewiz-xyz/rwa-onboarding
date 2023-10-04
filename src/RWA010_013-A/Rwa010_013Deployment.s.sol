@@ -7,8 +7,8 @@ import {SolidityTypeConversions as stc} from "../shared/SolidityTypeConversions.
 import {JsonFormatter as jf} from "../shared/JsonFormatter.sol";
 import {Strings as s} from "../shared/Strings.sol";
 
-import {RwaTokenFactory} from "mip21-toolkit/tokens/RwaTokenFactory.sol";
-import {RwaUrn} from "mip21-toolkit/urns/RwaUrn.sol";
+import {RwaTokenFactory} from "rwa-toolkit/tokens/RwaTokenFactory.sol";
+import {RwaUrn} from "rwa-toolkit/urns/RwaUrn.sol";
 import {GemJoinAbstract} from "dss-interfaces/dss/GemJoinAbstract.sol";
 
 contract Rwa010_013Deployment is Script {
