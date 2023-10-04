@@ -22,6 +22,8 @@ contract PSM_PAX_A_JarDeploymentScript is Script {
         MCD_PSM_PAX_A = CHANGELOG.getAddress("MCD_PSM_PAX_A");
         PAXUSD = CHANGELOG.getAddress("PAXUSD");
 
+        vm.startBroadcast();
+
         address RWA_JAR = address(new RwaJar(address(CHANGELOG)));
         console2.log("RWA_JAR: %s", RWA_JAR);
 
@@ -30,8 +32,10 @@ contract PSM_PAX_A_JarDeploymentScript is Script {
         inputCJar.rely(MCD_PAUSE_PROXY);
         inputCJar.deny(msg.sender);
         address RWA_INPUT_CONDUIT_JAR = address(inputCJar);
-
         console2.log("RWA_INPUT_CONDUIT_JAR: %s", RWA_INPUT_CONDUIT_JAR);
+
+        vm.stopBroadcast();
+
 
         return Result({
             jar: RWA_JAR,
